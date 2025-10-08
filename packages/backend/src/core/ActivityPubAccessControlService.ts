@@ -187,6 +187,12 @@ export class ActivityPubAccessControlService {
 		reason: string;
 		host?: string;
 	} | null> {
+		const userAgent = request.headers['user-agent'];
+		if (typeof userAgent === 'string' && userAgent.toLowerCase().includes('tempura')) {
+			this.logger.debug('Bypassing ActivityPub access control for tempura client');
+			return null;
+		}
+
 		const remoteHost = this.extractRemoteHostFromRequest(request);
 
 		if (!remoteHost) {
