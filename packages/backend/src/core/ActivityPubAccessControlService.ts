@@ -165,6 +165,23 @@ export class ActivityPubAccessControlService {
 		}
 
 		const instance = await this.instancesRepository.findOneBy({ host });
+
+		if (instance != null && instance.suspensionState === 'autoSuspendedForNotResponding') {
+			try {
+				await this.instancesRepository.update(instance.id, {
+					suspensionState: 'none',
+					isNotResponding: false,
+					notRespondingSince: null,
+				});
+				instance.suspensionState = 'none';
+				instance.isNotResponding = false;
+				instance.notRespondingSince = null;
+				this.logger.info(`Auto-resumed federation for ${host} after inbound request.`);
+			} catch (err) {
+				this.logger.warn(`Failed to auto-resume federation for ${host}: ${err}`);
+			}
+		}
+
 		const isSuspended = instance?.suspensionState !== 'none';
 		const isQuarantined = instance?.quarantineLimited ?? false;
 
