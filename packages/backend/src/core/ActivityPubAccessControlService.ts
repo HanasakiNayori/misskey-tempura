@@ -159,19 +159,12 @@ export class ActivityPubAccessControlService {
 		isQuarantined: boolean;
 		reason?: string;
 	}> {
-		const instance = await this.instancesRepository.findOneBy({ host });
-
-		// misskey-tempura系インスタンスは保護機構をバイパスして連合できるようにする
-		if (instance?.softwareVersion?.toLowerCase().includes('tempura')) {
-			this.logger.info(`Bypassing access control for misskey-tempura instance: ${host}`);
-			return { isBlocked: false, isSuspended: false, isQuarantined: false };
-		}
-
 		const isBlocked = this.utilityService.isBlockedHost(this.meta.blockedHosts, host);
 		if (isBlocked) {
 			return { isBlocked: true, isSuspended: false, isQuarantined: false, reason: 'blocked' };
 		}
 
+		const instance = await this.instancesRepository.findOneBy({ host });
 		const isSuspended = instance?.suspensionState !== 'none';
 		const isQuarantined = instance?.quarantineLimited ?? false;
 
