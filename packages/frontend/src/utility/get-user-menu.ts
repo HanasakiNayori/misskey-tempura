@@ -58,6 +58,10 @@ const period: PeriodType[] = [{
 	key: 'oneWeek',
 	time: 1000 * 60 * 60 * 24 * 7,
 	text: i18n.tsx._timeIn.weeks({ n: (1).toString() }),
+}, {
+	key: 'oneMonth',
+	time: 1000 * 60 * 60 * 24 * 30,
+	text: i18n.ts.oneMonth,
 }];
 
 async function getPeriod(title: string, text?: string) {
@@ -521,40 +525,17 @@ export function getUserMenu(user: Misskey.entities.UserDetailed, router: Router 
 				icon: 'ti ti-badges',
 				text: i18n.ts.roles,
 				children: async () => {
-					const roles = await rolesCache.fetch();
+				const roles = await rolesCache.fetch();
 
-					return roles.filter(r => r.target === 'manual').map(r => ({
-						text: r.name,
-						action: async () => {
-							const { canceled, result: period } = await os.select({
-								title: i18n.ts.period + ': ' + r.name,
-								items: [{
-									value: 'indefinitely', label: i18n.ts.indefinitely,
-								}, {
-									value: 'oneHour', label: i18n.ts.oneHour,
-								}, {
-									value: 'oneDay', label: i18n.ts.oneDay,
-								}, {
-									value: 'oneWeek', label: i18n.ts.oneWeek,
-								}, {
-									value: 'oneMonth', label: i18n.ts.oneMonth,
-								}],
-								default: 'indefinitely',
-							});
-							if (canceled) return;
+				return roles.filter(r => r.target === 'manual').map(r => ({
+					text: r.name,
+					action: async () => {
+						const expiresAt = await getPeriod(i18n.ts.period + ': ' + r.name);
+						if (expiresAt === false) return;
 
-							const expiresAt = period === 'indefinitely' ? null
-								: period === 'oneHour' ? Date.now() + (1000 * 60 * 60)
-								: period === 'oneDay' ? Date.now() + (1000 * 60 * 60 * 24)
-								: period === 'oneWeek' ? Date.now() + (1000 * 60 * 60 * 24 * 7)
-								: period === 'oneMonth' ? Date.now() + (1000 * 60 * 60 * 24 * 30)
-								: null;
-							const expiresAt = await getPeriod(i18n.ts.period + ': ' + r.name);
-							if (expiresAt === false) return;
-
-							os.apiWithDialog('admin/roles/assign', { roleId: r.id, userId: user.id, expiresAt });
-						},
-					}));
+						os.apiWithDialog('admin/roles/assign', { roleId: r.id, userId: user.id, expiresAt });
+					},
+				}));
 				},
 			});
 		}

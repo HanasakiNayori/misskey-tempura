@@ -1441,7 +1441,6 @@ customCssIsDisabledBecauseSafeMode: "セーフモードが有効なため、カ�
 themeIsDefaultBecauseSafeMode: "セーフモードが有効な間はデフォルトのテーマが使用されます。セーフモードをオフにすると元に戻ります。"
 thankYouForTestingBeta: "ベータ版の検証にご協力いただきありがとうございます！"
 createUserSpecifiedNote: "ユーザー指定ノートを作成"
-schedulePost: "投稿を予約"
 scheduleToPostOnX: "{x}に投稿を予約します"
 scheduledToPostOnX: "{x}に投稿が予約されています"
 schedule: "予約"
@@ -2881,7 +2880,6 @@ _notification:
   roleAssigned: "ロールが付与されました"
   chatRoomInvitationReceived: "ダイレクトメッセージのグループへ招待されました"
   scheduledNoteFailed: "予約投稿に失敗しました"
-  scheduledNotePosted: "予約投稿をノートしました"
   emptyPushNotificationMessage: "プッシュ通知の更新をしました"
   achievementEarned: "実績を獲得"
   testNotification: "通知テスト"
@@ -2930,7 +2928,6 @@ _notification:
     createToken: "アクセストークンの作成"
     test: "通知のテスト"
     app: "連携アプリからの通知"
-    scheduledNotePosted: "予約投稿に成功"
     scheduledNoteFailed: "予約投稿に失敗"
 
   _actions:

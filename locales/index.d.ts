@@ -5786,10 +5786,6 @@ export interface Locale extends ILocale {
      */
     "createUserSpecifiedNote": string;
     /**
-     * 投稿を予約
-     */
-    "schedulePost": string;
-    /**
      * {x}に投稿を予約します
      */
     "scheduleToPostOnX": ParameterizedString<"x">;
@@ -10926,10 +10922,6 @@ export interface Locale extends ILocale {
          */
         "scheduledNoteFailed": string;
         /**
-         * 予約投稿をノートしました
-         */
-        "scheduledNotePosted": string;
-        /**
          * プッシュ通知の更新をしました
          */
         "emptyPushNotificationMessage": string;
@@ -11116,10 +11108,6 @@ export interface Locale extends ILocale {
              * 連携アプリからの通知
              */
             "app": string;
-            /**
-             * 予約投稿に成功
-             */
-            "scheduledNotePosted": string;
             /**
              * 予約投稿に失敗
              */
