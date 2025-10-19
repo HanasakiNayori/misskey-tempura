@@ -789,28 +789,6 @@ export class QueueService {
 	}
 
 	/**
-	 * @see ScheduleNotePostJobData
-	 * @see ScheduleNotePostProcessorService
-	 */
-	@bindThis
-	public scheduleNotePost(scheduleNoteId: string, scheduledAt: number): Promise<Bull.Job> {
-		const delay = scheduledAt - Date.now();
-		return this.scheduleNotePostQueue.add(String(delay), {
-			scheduleNoteId,
-		}, {
-			delay,
-			removeOnComplete: {
-				age: 3600 * 24 * 7, // keep up to 7 days
-				count: 30,
-			},
-			removeOnFail: {
-				age: 3600 * 24 * 7, // keep up to 7 days
-				count: 100,
-			},
-		});
-	}
-
-	/**
 	 * @see ScheduledNoteDeleteJobData
 	 * @see ScheduledNoteDeleteProcessorService
 	 */
@@ -846,7 +824,6 @@ export class QueueService {
 			case 'objectStorage': return this.objectStorageQueue;
 			case 'userWebhookDeliver': return this.userWebhookDeliverQueue;
 			case 'systemWebhookDeliver': return this.systemWebhookDeliverQueue;
-			case 'scheduleNotePost': return this.scheduleNotePostQueue;
 			case 'scheduledNoteDelete': return this.scheduledNoteDeleteQueue;
 			default: throw new Error(`Unrecognized queue type: ${type}`);
 		}

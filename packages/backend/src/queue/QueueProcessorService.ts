@@ -50,7 +50,6 @@ import { QueueLoggerService } from './QueueLoggerService.js';
 import { QUEUE, baseWorkerOptions } from './const.js';
 import { CleanExpiredRemoteFilesProcessorService } from './processors/CleanExpiredRemoteFilesProcessorService.js';
 import { ReDownloadRemoteFileProcessorService } from './processors/ReDownloadRemoteFileProcessorService.js';
-import { ScheduleNotePostProcessorService } from './processors/ScheduleNotePostProcessorService.js';
 import { ScheduledNoteDeleteProcessorService } from './processors/ScheduledNoteDeleteProcessorService.js';
 import { CleanExpiredMultipartUploadsProcessorService } from './processors/CleanExpiredMultipartUploadsProcessorService.js';
 
@@ -139,7 +138,6 @@ export class QueueProcessorService implements OnApplicationShutdown {
 		private cleanRemoteNotesProcessorService: CleanRemoteNotesProcessorService,
 		private cleanExpiredRemoteFilesProcessorService: CleanExpiredRemoteFilesProcessorService,
 		private reDownloadRemoteFileProcessorService: ReDownloadRemoteFileProcessorService,
-		private scheduleNotePostProcessorService: ScheduleNotePostProcessorService,
 		private scheduledNoteDeleteProcessorService: ScheduledNoteDeleteProcessorService,
 		private cleanExpiredMultipartUploadsProcessorService: CleanExpiredMultipartUploadsProcessorService,
 	) {
@@ -184,6 +182,7 @@ export class QueueProcessorService implements OnApplicationShutdown {
 					case 'checkModeratorsActivity': return this.checkModeratorsActivityProcessorService.process();
 					case 'clean': return this.cleanProcessorService.process();
 					case 'cleanRemoteNotes': return this.cleanRemoteNotesProcessorService.process(job);
+					case 'CleanExpiredRemoteFiles': return this.cleanExpiredRemoteFilesProcessorService.process();
 					case 'cleanExpiredMultipartUploads': return this.cleanExpiredMultipartUploadsProcessorService.process();
 					default: throw new Error(`unrecognized job type ${job.name} for system`);
 				}
@@ -552,15 +551,6 @@ export class QueueProcessorService implements OnApplicationShutdown {
 				}
 			}, {
 				...baseWorkerOptions(this.config, QUEUE.POST_SCHEDULED_NOTE),
-				autorun: false,
-			});
-		}
-		//#endregion
-
-		//#region schedule note post
-		{
-			this.schedulerNotePostQueueWorker = new Bull.Worker(QUEUE.SCHEDULE_NOTE_POST, (job) => this.scheduleNotePostProcessorService.process(job), {
-				...baseWorkerOptions(this.config, QUEUE.SCHEDULE_NOTE_POST),
 				autorun: false,
 			});
 		}

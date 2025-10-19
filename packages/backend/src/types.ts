@@ -27,8 +27,6 @@
  * login - ログイン
  * loginFailed - ログインに失敗
  * createToken - トークン作成
- * scheduledNotePosted - 予約投稿をノート
- * scheduledNoteFailed - 予約投稿に失敗
  * app - アプリ通知
  * test - テスト通知（サーバー側）
  */
@@ -56,8 +54,6 @@ export const notificationTypes = [
 	'login',
 	'loginFailed',
 	'createToken',
-	'scheduledNotePosted',
-	'scheduledNoteFailed',
 	'app',
 	'test',
 ] as const;

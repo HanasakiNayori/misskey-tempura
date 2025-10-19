@@ -2879,7 +2879,6 @@ _notification:
   unreadAntennaNote: "アンテナ {name}"
   roleAssigned: "ロールが付与されました"
   chatRoomInvitationReceived: "ダイレクトメッセージのグループへ招待されました"
-  scheduledNoteFailed: "予約投稿に失敗しました"
   emptyPushNotificationMessage: "プッシュ通知の更新をしました"
   achievementEarned: "実績を獲得"
   testNotification: "通知テスト"
@@ -2928,7 +2927,6 @@ _notification:
     createToken: "アクセストークンの作成"
     test: "通知のテスト"
     app: "連携アプリからの通知"
-    scheduledNoteFailed: "予約投稿に失敗"
 
   _actions:
     followBack: "フォローバック"

@@ -173,17 +173,7 @@ export type MiNotification = {
 	type: 'test';
 	id: string;
 	createdAt: string;
-} | {
-	type: 'scheduledNotePosted';
-	id: string;
-	createdAt: string;
-	noteId: MiNote['id'];
-} | {
-	type: 'scheduledNoteFailed';
-	id: string;
-	createdAt: string;
-	reason: string;
-};
+} ;
 
 export type MiGroupedNotification = MiNotification | {
 	type: 'reaction:grouped';

@@ -46,7 +46,6 @@ import { ExportFavoritesProcessorService } from './processors/ExportFavoritesPro
 import { RelationshipProcessorService } from './processors/RelationshipProcessorService.js';
 import { CleanExpiredRemoteFilesProcessorService } from './processors/CleanExpiredRemoteFilesProcessorService.js';
 import { ReDownloadRemoteFileProcessorService } from './processors/ReDownloadRemoteFileProcessorService.js';
-import { ScheduleNotePostProcessorService } from './processors/ScheduleNotePostProcessorService.js';
 import { ScheduledNoteDeleteProcessorService } from './processors/ScheduledNoteDeleteProcessorService.js';
 import { CleanExpiredMultipartUploadsProcessorService } from './processors/CleanExpiredMultipartUploadsProcessorService.js';
 
@@ -97,7 +96,6 @@ import { CleanExpiredMultipartUploadsProcessorService } from './processors/Clean
 		QueueProcessorService,
 		CleanExpiredRemoteFilesProcessorService,
 		ReDownloadRemoteFileProcessorService,
-		ScheduleNotePostProcessorService,
 		ScheduledNoteDeleteProcessorService,
 		CleanExpiredMultipartUploadsProcessorService,
 	],

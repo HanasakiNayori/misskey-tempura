@@ -37,8 +37,6 @@ export const notificationTypes = [
 	'roleAssigned',
 	'chatRoomInvitationReceived',
 	'achievementEarned',
-	'scheduledNoteFailed',
-	'scheduledNotePosted',
 	'exportCompleted',
 	'test',
 	'login',

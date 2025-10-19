@@ -2615,7 +2615,6 @@ _notification:
   newNote: "新しい投稿"
   unreadAntennaNote: "アンテニャ {name}"
   roleAssigned: "ロールが付与されました"
-  scheduledNoteFailed: "予約投稿に失敗しました"
   scheduledNotePosted: "予約投稿をノートしました"
   emptyPushNotificationMessage: "プッシュ通知の更新をしました"
   achievementEarned: "実績を獲得"
@@ -2659,8 +2658,6 @@ _notification:
     loginFailed: "ログインに失敗"
     test: "通知のテスト"
     app: "連携アプリからの通知"
-    scheduledNotePosted: "予約投稿に成功"
-    scheduledNoteFailed: "予約投稿に失敗"
 
   _actions:
     followBack: "フォローバック"
