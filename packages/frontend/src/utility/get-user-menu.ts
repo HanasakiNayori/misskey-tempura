@@ -89,23 +89,35 @@ export function getUserMenu(user: Misskey.entities.UserDetailed, router: Router 
 				user.isMuted = false;
 			});
 		} else {
-			const { dispose } = os.popup(defineAsyncComponent(() => import('@/components/MkMuteDialog.vue')), {}, {
-				done: (expiresAt: number | null) => {
-					os.apiWithDialog('mute/create', {
-						userId: user.id,
-						expiresAt,
-					}, undefined, {
-						'15273a89-374d-49fa-8df6-8bb3feeea455': {
-							title: i18n.ts.permissionDeniedError,
-							text: i18n.ts._extraSettings.muteThisUserIsProhibited,
-						},
-					}).then(() => {
-						user.isMuted = true;
-					});
-				},
-				closed: () => {
-					dispose();
-				},
+			const { canceled, result: period } = await os.select({
+				title: i18n.ts.mutePeriod,
+				items: [{
+					value: 'indefinitely', label: i18n.ts.indefinitely,
+				}, {
+					value: 'tenMinutes', label: i18n.ts.tenMinutes,
+				}, {
+					value: 'oneHour', label: i18n.ts.oneHour,
+				}, {
+					value: 'oneDay', label: i18n.ts.oneDay,
+				}, {
+					value: 'oneWeek', label: i18n.ts.oneWeek,
+				}],
+				default: 'indefinitely',
+			});
+			if (canceled) return;
+
+			const expiresAt = period === 'indefinitely' ? null
+				: period === 'tenMinutes' ? Date.now() + (1000 * 60 * 10)
+				: period === 'oneHour' ? Date.now() + (1000 * 60 * 60)
+				: period === 'oneDay' ? Date.now() + (1000 * 60 * 60 * 24)
+				: period === 'oneWeek' ? Date.now() + (1000 * 60 * 60 * 24 * 7)
+				: null;
+
+			os.apiWithDialog('mute/create', {
+				userId: user.id,
+				expiresAt,
+			}).then(() => {
+				user.isMuted = true;
 			});
 		}
 	}
@@ -363,16 +375,31 @@ export function getUserMenu(user: Misskey.entities.UserDetailed, router: Router 
 		});
 	}
 
+	if ($i && meId === user.id) {
+		menuItems.push({
+			icon: 'ti ti-qrcode',
+			text: i18n.ts.qr,
+			action: () => {
+				router.push('/qr');
+			},
+		});
+	}
+
 	if (notesSearchAvailable && (user.host == null || canSearchNonLocalNotes)) {
 		menuItems.push({
 			icon: 'ti ti-search',
 			text: i18n.ts.searchThisUsersNotes,
 			action: () => {
-				router.push('/search', {
-					query: {
+				const query = {
 						username: user.username,
-						host: user.host ?? undefined,
-					},
+					} as { username: string, host?: string };
+
+				if (user.host !== null) {
+					query.host = user.host;
+				}
+
+				router.push('/search', {
+					query
 				});
 			},
 		});
@@ -477,7 +504,6 @@ export function getUserMenu(user: Misskey.entities.UserDetailed, router: Router 
 							caseSensitive: antenna.caseSensitive,
 							withReplies: antenna.withReplies,
 							withFile: antenna.withFile,
-							notify: antenna.notify,
 						});
 						antennasCache.delete();
 					},
@@ -500,6 +526,29 @@ export function getUserMenu(user: Misskey.entities.UserDetailed, router: Router 
 					return roles.filter(r => r.target === 'manual').map(r => ({
 						text: r.name,
 						action: async () => {
+							const { canceled, result: period } = await os.select({
+								title: i18n.ts.period + ': ' + r.name,
+								items: [{
+									value: 'indefinitely', label: i18n.ts.indefinitely,
+								}, {
+									value: 'oneHour', label: i18n.ts.oneHour,
+								}, {
+									value: 'oneDay', label: i18n.ts.oneDay,
+								}, {
+									value: 'oneWeek', label: i18n.ts.oneWeek,
+								}, {
+									value: 'oneMonth', label: i18n.ts.oneMonth,
+								}],
+								default: 'indefinitely',
+							});
+							if (canceled) return;
+
+							const expiresAt = period === 'indefinitely' ? null
+								: period === 'oneHour' ? Date.now() + (1000 * 60 * 60)
+								: period === 'oneDay' ? Date.now() + (1000 * 60 * 60 * 24)
+								: period === 'oneWeek' ? Date.now() + (1000 * 60 * 60 * 24 * 7)
+								: period === 'oneMonth' ? Date.now() + (1000 * 60 * 60 * 24 * 30)
+								: null;
 							const expiresAt = await getPeriod(i18n.ts.period + ': ' + r.name);
 							if (expiresAt === false) return;
 
@@ -536,8 +585,8 @@ export function getUserMenu(user: Misskey.entities.UserDetailed, router: Router 
 		//}
 
 		menuItems.push({ type: 'divider' }, {
-			icon: 'ti ti-mail',
-			text: i18n.ts.sendMessage,
+			icon: 'ti ti-pencil-heart',
+			text: i18n.ts.createUserSpecifiedNote,
 			action: () => {
 				const canonical = user.host === null ? `@${user.username}` : `@${user.username}@${user.host}`;
 				os.post({ specified: user, initialText: `${canonical} ` });
