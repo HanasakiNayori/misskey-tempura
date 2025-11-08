@@ -63,8 +63,6 @@ export const store = markRaw(new Pizzax('base', {
 			'hashtags',
 			'plugins',
 			'addMfmFunction',
-			'scheduleNote',
-			'schedulePostList',
 		],
 	},
 	visibility: {

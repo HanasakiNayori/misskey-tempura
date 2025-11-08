@@ -91,7 +91,6 @@ import { MiBubbleGameRecord } from '@/models/BubbleGameRecord.js';
 import { MiReversiGame } from '@/models/ReversiGame.js';
 import { MiChatApproval } from '@/models/ChatApproval.js';
 import { MiSystemAccount } from '@/models/SystemAccount.js';
-import { MiNoteSchedule } from '@/models/NoteSchedule.js';
 import { MiAnnouncementRole } from './models/AnnouncementRole.js';
 import { MiMultipartUpload } from '@/models/MultipartUpload.js';
 import { MiContactForm } from '@/models/ContactForm.js';
@@ -223,7 +222,6 @@ export const entities = [
 	MiNote,
 	MiNoteFavorite,
 	MiNoteReaction,
-	MiNoteSchedule,
 	MiNoteThreadMuting,
 	MiNoteDraft,
 	MiPage,

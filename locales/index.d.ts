@@ -8266,10 +8266,6 @@ export interface Locale extends ILocale {
              */
             "watermarkAvailable": string;
             /**
-             * 予約投稿の最大数
-             */
-            "scheduleNoteMax": string;
-            /**
              * コミュニティーロールの追加
              */
             "canAddRoles": string;
@@ -9835,14 +9831,6 @@ export interface Locale extends ILocale {
          * ダイレクトメッセージを閲覧する
          */
         "read:chat": string;
-        /**
-         * 予約投稿を見る
-         */
-        "read:notes-schedule": string;
-        /**
-         * 予約投稿を作成・削除する
-         */
-        "write:notes-schedule": string;
         /**
          * 実績を見る
          */
@@ -14949,10 +14937,6 @@ export interface Locale extends ILocale {
      * 予約投稿
      */
     "schedulePost": string;
-    /**
-     * 予約投稿一覧
-     */
-    "schedulePostList": string;
     /**
      * Administrator
      */
