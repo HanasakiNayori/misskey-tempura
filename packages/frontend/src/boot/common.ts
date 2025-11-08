@@ -111,7 +111,12 @@ export async function common(createVue: () => Promise<App<Element>>) {
 
 		// 比較後にバージョンを更新し、テーマキャッシュをクリアする
 		miLocalStorage.setItem('lastVersion', version);
-		miLocalStorage.removeItem('theme');
+
+		try { // 変なバージョン文字列来るとcompareVersionsでエラーになるため
+			if (lastVersion != null && compareVersions(version, lastVersion) === 1) {
+				isClientUpdated = true;
+			}
+		} catch (err) { /* empty */ }
 	}
 	//#endregion
 
@@ -211,7 +216,7 @@ export async function common(createVue: () => Promise<App<Element>>) {
 		})();
 
 		applyTheme(theme);
-	}, { immediate: isSafeMode || miLocalStorage.getItem('theme') == null });
+	}, { immediate: true });
 
 	window.document.documentElement.dataset.colorScheme = store.s.darkMode ? 'dark' : 'light';
 
@@ -239,14 +244,6 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	watch(() => prefer.s.customFont ?? '', (font) => {
 		applyFont(font);
 	});
-	}
-
-	if (!isSafeMode) {
-		if (prefer.s.darkTheme && store.s.darkMode) {
-			if (miLocalStorage.getItem('themeId') !== prefer.s.darkTheme.id) applyTheme(prefer.s.darkTheme);
-		} else if (prefer.s.lightTheme && !store.s.darkMode) {
-			if (miLocalStorage.getItem('themeId') !== prefer.s.lightTheme.id) applyTheme(prefer.s.lightTheme);
-		}
 
 		fetchInstanceMetaPromise.then(() => {
 			// TODO: instance.defaultLightTheme/instance.defaultDarkThemeが不正な形式だった場合のケア
