@@ -59,6 +59,7 @@ import MkKeyValue from '@/components/MkKeyValue.vue';
 import MkFolder from '@/components/MkFolder.vue';
 import MkLink from '@/components/MkLink.vue';
 import MkCode from '@/components/MkCode.vue';
+import MkButton from '@/components/MkButton.vue';
 
 const userEnv = ref<UserEnvironment | null>(null);
 
@@ -67,7 +68,6 @@ async function onOpened() {
 		userEnv.value = await getUserEnvironment();
 	}
 }
-import MkButton from '@/components/MkButton.vue';
 
 const router = useRouter();
 

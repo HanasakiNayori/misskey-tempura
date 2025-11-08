@@ -62,7 +62,13 @@ import { Paginator } from '@/utility/paginator.js';
 
 type SearchQuery = {
 	sort?: '-createdAt' | '+createdAt' | '-updatedAt' | '+updatedAt';
-	state?: 'all' | 'available' | 'admin' | 'moderator' | 'suspended'| 'pending';
+	state?:
+		| 'all'
+		| 'available'
+		| 'admin'
+		| 'moderator'
+		| 'suspended'
+		| 'pending';
 	origin?: 'combined' | 'local' | 'remote';
 	username?: string;
 	hostname?: string;

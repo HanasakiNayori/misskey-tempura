@@ -173,7 +173,7 @@ export type MiNotification = {
 	type: 'test';
 	id: string;
 	createdAt: string;
-} ;
+};
 
 export type MiGroupedNotification = MiNotification | {
 	type: 'reaction:grouped';

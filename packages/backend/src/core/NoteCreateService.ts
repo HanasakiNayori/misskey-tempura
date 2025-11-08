@@ -301,6 +301,9 @@ export class NoteCreateService implements OnApplicationShutdown {
 		apMentions?: MinimumUser[] | null;
 		apHashtags?: string[] | null;
 		apEmojis?: string[] | null;
+		deleteAt?: Date | null;
+		isScheduledForPrivate?: boolean;
+		deliveryTargets?: { mode: 'include' | 'exclude'; hosts: string[] } | null;
 	}): Promise<MiNote> {
 		const visibleUsers = data.visibleUserIds.length > 0 ? await this.usersRepository.findBy({
 			id: In(data.visibleUserIds),
@@ -436,6 +439,9 @@ export class NoteCreateService implements OnApplicationShutdown {
 			apMentions: data.apMentions,
 			apHashtags: data.apHashtags,
 			apEmojis: data.apEmojis,
+			deleteAt: data.deleteAt,
+			isScheduledForPrivate: data.isScheduledForPrivate,
+			deliveryTargets: data.deliveryTargets,
 		});
 	}
 
