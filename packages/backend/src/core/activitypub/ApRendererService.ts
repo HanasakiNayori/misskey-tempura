@@ -508,7 +508,6 @@ export class ApRendererService {
 				},
 			}),
 			_misskey_quote: quote,
-			_misskey_deleteAt: note.deleteAt ? note.deleteAt.toISOString() : undefined,
 			quoteUrl: quote,
 			published: this.idService.parse(note.id).date.toISOString(),
 			to,

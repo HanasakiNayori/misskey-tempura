@@ -849,7 +849,7 @@ export class NoteCreateService implements OnApplicationShutdown {
 			});
 		}
 
-		if (data.deleteAt && user.host === null) {
+		if (data.deleteAt) {
 			const delay = data.deleteAt.getTime() - Date.now();
 			this.queueService.scheduledNoteDeleteQueue.add(note.id, {
 				noteId: note.id,

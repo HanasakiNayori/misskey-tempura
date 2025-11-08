@@ -17,7 +17,6 @@ export interface IObject {
 	_misskey_requireSigninToViewContents?: boolean;
 	_misskey_makeNotesFollowersOnlyBefore?: number | null;
 	_misskey_makeNotesHiddenBefore?: number | null;
-	_misskey_deleteAt?: string | null;
 	published?: string;
 	cc?: ApObject;
 	to?: ApObject;
