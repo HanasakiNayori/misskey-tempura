@@ -39,11 +39,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 			<SearchMarker :keywords="['llm', 'gemini', 'model', 'version']">
 				<MkPreferenceContainer k="geminiModel">
-					<MkSelect v-model="geminiModel" :disabled="useGeminiLLMAPI">
+					<MkSelect v-model="geminiModel" :items="geminiModelItems" :disabled="useGeminiLLMAPI">
 						<template #label><SearchLabel>{{ i18n.ts._llm.geminiModelLabel }}</SearchLabel></template>
-						<option v-for="model in geminiModels" :key="model" :value="model">
-							{{ model }}
-						</option>
 					</MkSelect>
 				</MkPreferenceContainer>
 			</SearchMarker>
@@ -156,7 +153,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkInput from '@/components/MkInput.vue';
 import MkSelect from '@/components/MkSelect.vue';
@@ -192,6 +189,7 @@ const geminiNoteProfessionalText = prefer.model('geminiNoteProfessionalText');
 const geminiNoteCatText = prefer.model('geminiNoteCatText');
 const geminiNoteCustomText = prefer.model('geminiNoteCustomText');
 const geminiThinkingBudget = prefer.model('geminiThinkingBudget');
+const geminiModelItems = computed(() => geminiModels.map((model) => ({ value: model, label: model })));
 
 async function saveLLMSettings() {
 	await suggestReload();

@@ -11,10 +11,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<div class="_gaps_m">
 			<SearchMarker :keywords="['font']">
 				<MkPreferenceContainer k="customFont">
-					<MkSelect v-model="customFont">
+					<MkSelect v-model="customFont" :items="customFontItems">
 						<template #label><SearchLabel>{{ i18n.ts.customFont }}</SearchLabel></template>
-						<option :value="null">{{ i18n.ts.default }}</option>
-						<option v-for="[name, font] of Object.entries(fontList)" :key="name" :value="name">{{ font.name }}</option>
 					</MkSelect>
 				</MkPreferenceContainer>
 			</SearchMarker>
@@ -32,10 +30,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 			<SearchMarker :keywords="['twitter', 'embed', 'provider']">
 				<MkPreferenceContainer k="defaultFxTwitterEmbedProvider">
-					<MkSelect v-model="twitterEmbedMode">
+					<MkSelect v-model="twitterEmbedMode" :items="twitterEmbedModeItems">
 						<template #label><SearchLabel>{{ i18n.ts.defaultFxTwitterEmbedProvider }}</SearchLabel></template>
-						<option value="fxtwitter">{{ i18n.ts.defaultFxTwitterEmbedProviderOptions.fxtwitter }}</option>
-						<option value="custom">{{ i18n.ts.defaultFxTwitterEmbedProviderOptions.custom }}</option>
 					</MkSelect>
 					<MkInput v-if="twitterEmbedMode === 'custom'" v-model="defaultFxTwitterEmbedProvider">
 						<template #label><SearchLabel>{{ i18n.ts.customFxTwitterEmbedProvider }}</SearchLabel></template>
@@ -172,6 +168,18 @@ const isChanged = computed(() => {
 		return colors[key] !== originalColors[key];
 	});
 });
+
+// Items for customFont MkSelect
+const customFontItems = computed(() => [
+	{ value: null, label: i18n.ts.default },
+	...Object.entries(fontList).map(([name, font]: [string, { name: string; fontFamily: string; importUrl: string }]) => ({ value: name, label: font.name }))
+]);
+
+// Items for twitterEmbedMode MkSelect
+const twitterEmbedModeItems = computed(() => [
+	{ value: 'fxtwitter', label: i18n.ts.defaultFxTwitterEmbedProviderOptions.fxtwitter },
+	{ value: 'custom', label: i18n.ts.defaultFxTwitterEmbedProviderOptions.custom }
+]);
 
 function saveColors() {
 	if (!isChanged.value) return;
