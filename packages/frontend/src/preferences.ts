@@ -10,6 +10,7 @@ import { isSameScope, PreferencesManager } from '@/preferences/manager.js';
 import { store } from '@/store.js';
 import { $i } from '@/i.js';
 import { misskeyApi } from '@/utility/misskey-api.js';
+import { normalizePostFormActions } from '@/utility/post-form.js';
 import { TAB_ID } from '@/tab-id.js';
 
 const syncGroup = 'default';
@@ -99,6 +100,19 @@ const io: StorageProvider = {
 
 export const prefer = new PreferencesManager(io, $i);
 
+function sanitizePostFormActions() {
+	const normalized = normalizePostFormActions(prefer.s.postFormActions);
+	const original = prefer.s.postFormActions;
+	if (
+		normalized.length !== original.length ||
+		normalized.some((action, index) => action !== original[index])
+	) {
+		prefer.commit('postFormActions', normalized);
+	}
+}
+
+sanitizePostFormActions();
+
 let latestSyncedAt = Date.now();
 
 function syncBetweenTabs() {
@@ -112,6 +126,7 @@ function syncBetweenTabs() {
 	if (latestAt <= latestSyncedAt) return;
 
 	prefer.reloadProfile();
+	sanitizePostFormActions();
 
 	latestSyncedAt = Date.now();
 

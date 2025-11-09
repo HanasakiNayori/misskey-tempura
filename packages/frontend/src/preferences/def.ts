@@ -530,8 +530,6 @@ export const PREF_DEF = definePreferences({
 			'hashtags',
 			'plugins',
 			'addMfmFunction',
-			'scheduleNote',
-			'schedulePostList',
 		],
 	},
 	defaultScheduledNoteDelete: {

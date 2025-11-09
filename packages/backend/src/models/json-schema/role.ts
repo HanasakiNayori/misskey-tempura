@@ -337,10 +337,6 @@ export const packedRolePoliciesSchema = {
 			type: 'boolean',
 			optional: false, nullable: false,
 		},
-		scheduleNoteMax: {
-			type: 'integer',
-			optional: false, nullable: false,
-		},
 		canAddRoles: {
 			type: 'boolean',
 			optional: false, nullable: false,

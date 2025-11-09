@@ -1900,7 +1900,6 @@ _role:
     canImportFollowing: "フォローのインポートを許可"
     canImportMuting: "ミュートのインポートを許可"
     canImportUserLists: "リストのインポートを許可"
-    scheduleNoteMax: "予約投稿の最大数"
     canAddRoles: "コミュニティーロールの追加"
     canUseUnFollowNotification: "フォロー解除通知を許可"
     canUseBlockedNotification: "ブロック通知を許可"
@@ -2330,8 +2329,6 @@ _permissions:
   "read:clip-favorite": "クリップのいいねを見る"
   "read:federation": "連合に関する情報を取得する"
   "write:report-abuse": "違反を報告する"
-  "read:notes-schedule": "予約投稿を見る"
-  "write:notes-schedule": "予約投稿を作成・削除する"
   "read:achievements": "実績を見る"
   "read:announcements": "お知らせを見る"
   "read:stats": "統計情報を見る"
@@ -3231,7 +3228,6 @@ _extraSettings:
   unfollowThisUserProhibited: "このユーザーのフォロー解除は禁止されています。"
 
 schedulePost: "予約投稿"
-schedulePostList: "予約投稿一覧"
 
 isAdmin: "Administrator"
 backgroundImageUrls: "背景画像URL"

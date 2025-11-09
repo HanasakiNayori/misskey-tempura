@@ -46,14 +46,6 @@ export const bottomItemDef = {
 		title: i18n.ts.clearPost,
 		icon: 'ti-trash',
 	},
-	scheduleNote: {
-		title: i18n.ts.schedulePost,
-		icon: 'ti ti-calendar-time',
-	},
-	schedulePostList: {
-		title: i18n.ts.schedulePostList,
-		icon: 'ti ti-calendar-event',
-	},
 	notesTransformation: {
 		title: i18n.ts._llm.notesTransformation,
 		icon: 'ti ti-notes',
@@ -63,3 +55,21 @@ export const bottomItemDef = {
 		icon: 'ti-server-2',
 	},
 };
+
+export type PostFormActionKey = keyof typeof bottomItemDef;
+
+const bottomItemDefKeys = new Set<string>(Object.keys(bottomItemDef));
+
+export function isPostFormActionKey(value: string | null | undefined): value is PostFormActionKey {
+	return typeof value === 'string' && bottomItemDefKeys.has(value);
+}
+
+export function normalizePostFormActions(actions: readonly string[]): PostFormActionKey[] {
+	const normalized: PostFormActionKey[] = [];
+	for (const action of actions) {
+		if (isPostFormActionKey(action)) {
+			normalized.push(action);
+		}
+	}
+	return normalized;
+}

@@ -18,7 +18,6 @@ export const QUEUE = {
 	OBJECT_STORAGE: 'objectStorage',
 	USER_WEBHOOK_DELIVER: 'userWebhookDeliver',
 	SYSTEM_WEBHOOK_DELIVER: 'systemWebhookDeliver',
-	SCHEDULE_NOTE_POST: 'scheduleNotePost',
 	SCHEDULED_NOTE_DELETE: 'scheduledNoteDelete',
 };
 

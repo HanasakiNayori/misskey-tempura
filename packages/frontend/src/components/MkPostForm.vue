@@ -91,14 +91,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</div>
 	<MkPollEditor v-if="poll" v-model="poll" @destroyed="poll = null"/>
 	<MkDeleteScheduleEditor v-if="scheduledNoteDelete" v-model="scheduledNoteDelete" @destroyed="scheduledNoteDelete = null"/>
-	<MkScheduleEditor v-if="scheduleNote" v-model="scheduleNote" @destroyed="scheduleNote = null"/>
 	<MkDeliveryTargetEditor v-if="deliveryTargets" v-model="deliveryTargets" @destroyed="deliveryTargets = null"/>
 	<MkNotePreview v-if="showPreview" :class="$style.preview" :text="text" :files="files" :poll="poll ?? undefined" :useCw="useCw" :cw="cw" :user="postAccount ?? $i"/>
 	<!-- <div v-if="showingOptions" style="padding: 8px 16px;">
 	</div> -->
 	<footer :class="$style.footer">
 		<div :class="$style.footerLeft">
-			<template v-for="item in prefer.s.postFormActions">
+			<template v-for="item in normalizedPostFormActions">
 				<button v-if="!bottomItemActionDef[item].hide" :key="item" v-tooltip="bottomItemDef[item].title" class="_button" :class="[$style.footerButton, { [$style.footerButtonActive]: bottomItemActionDef[item].active }]" v-on="bottomItemActionDef[item].action ? { click: bottomItemActionDef[item].action } : {}">
 					<i class="ti" :class="bottomItemDef[item].icon"></i>
 				</button>
@@ -154,8 +153,7 @@ import { miLocalStorage } from '@/local-storage.js';
 import { claimAchievement } from '@/utility/achievements.js';
 import { emojiPicker } from '@/utility/emoji-picker.js';
 import { mfmFunctionPicker } from '@/utility/mfm-function-picker.js';
-import { bottomItemDef } from '@/utility/post-form.js';
-import MkScheduleEditor from '@/components/MkScheduleEditor.vue';
+import { bottomItemDef, normalizePostFormActions } from '@/utility/post-form.js';
 import MkDeliveryTargetEditor from '@/components/MkDeliveryTargetEditor.vue';
 import { transformTextWithGemini } from '@/utility/tempura-script/text-transformations.js';
 import { prefer } from '@/preferences.js';
@@ -229,9 +227,6 @@ const imeText = ref('');
 const showingOptions = ref(false);
 const textAreaReadOnly = ref(false);
 const justEndedComposition = ref(false);
-const scheduleNote = ref<{
-	scheduledAt: number | null;
-} | null>(null);
 const deliveryTargets = ref<DeliveryTargetEditorModelValue | null>(null);
 
 const renoteTargetNote: ShallowRef<PostFormProps['renote'] | null> = shallowRef(props.renote);
@@ -242,6 +237,7 @@ const serverDraftId = ref<string | null>(null);
 
 const dontShowOnLtl = computed(() => visibility.value === 'public_non_ltl');
 const postFormActions = getPluginHandlers('post_form_action');
+const normalizedPostFormActions = computed(() => normalizePostFormActions(prefer.r.postFormActions.value));
 
 const uploader = useUploader({
 	multiple: true,
@@ -388,21 +384,6 @@ const bottomItemActionDef: Record<keyof typeof bottomItemDef, {
 	clearPost: {
 		action: clear,
 	},
-	scheduleNote: {
-		hide: computed(() => $i.policies.scheduleNoteMax === 0),
-		active: scheduleNote,
-		action: toggleScheduleNote,
-	},
-	schedulePostList: {
-		hide: computed(() => $i.policies.scheduleNoteMax === 0),
-		action: () => {
-			const { dispose } = os.popup(defineAsyncComponent(() => import('@/components/MkSchedulePostListDialog.vue')), {}, {
-				closed: () => {
-					dispose();
-				},
-			});
-		},
-	},
 	notesTransformation: {
 		hide: computed(() => !($i.policies.canUseGeminiLLMAPI || geminiToken.value)),
 		action: () => {
@@ -526,7 +507,6 @@ function watchForDraft() {
 	watch(cw, () => saveDraft());
 	watch(poll, () => saveDraft());
 	watch(scheduledNoteDelete, () => saveDraft());
-	watch(scheduleNote, () => saveDraft());
 	watch(files, () => saveDraft(), { deep: true });
 	watch(visibility, () => saveDraft());
 	watch(localOnly, () => saveDraft());
@@ -839,7 +819,6 @@ function clear() {
 	poll.value = null;
 	quoteId.value = null;
 	scheduledAt.value = null;
-	scheduleNote.value = null;
 }
 
 function onKeydown(ev: KeyboardEvent) {
@@ -993,7 +972,6 @@ function saveDraft() {
 			files: files.value,
 			poll: poll.value,
 			scheduledNoteDelete: scheduledNoteDelete.value,
-			scheduleNote: scheduleNote.value,
 			...( visibleUsers.value.length > 0 ? { visibleUserIds: visibleUsers.value.map(x => x.id) } : {}),
 			quoteId: quoteId.value,
 			reactionAcceptance: reactionAcceptance.value,
@@ -1131,7 +1109,6 @@ async function post(ev?: MouseEvent) {
 		visibility: visibility.value,
 		visibleUserIds: visibility.value === 'specified' ? visibleUsers.value.map(u => u.id) : undefined,
 		reactionAcceptance: reactionAcceptance.value,
-		scheduleNote: scheduleNote.value ?? undefined,
 		deliveryTargets: deliveryTargets.value && !(deliveryTargets.value.mode === 'exclude' && deliveryTargets.value.hosts.length === 0) ? deliveryTargets.value : undefined,
 	};
 
@@ -1179,7 +1156,7 @@ async function post(ev?: MouseEvent) {
 	}
 
 	posting.value = true;
-	misskeyApi((postData.scheduleNote ? 'notes/schedule/create' : 'notes/create'), postData, token).then((res) => {
+	misskeyApi('notes/create', postData, token).then((res) => {
 		if (props.freezeAfterPosted) {
 			posted.value = true;
 		} else {
@@ -1445,16 +1422,6 @@ function cancelSchedule() {
 	scheduledAt.value = null;
 }
 
-function toggleScheduleNote() {
-	if (scheduleNote.value) {
-		scheduleNote.value = null;
-	} else {
-		scheduleNote.value = {
-			scheduledAt: null,
-		};
-	}
-}
-
 function saveCurrentUsers() {
 	store.set('specifiedUsers', visibleUsers.value.map(user => user.id));
 	os.success();
@@ -1505,9 +1472,6 @@ onMounted(() => {
 				}
 				if (draft.data.scheduledNoteDelete) {
 					scheduledNoteDelete.value = draft.data.scheduledNoteDelete;
-				}
-				if (draft.data.scheduleNote) {
-					scheduleNote.value = draft.data.scheduleNote;
 				}
 				if (draft.data.visibleUserIds) {
 					misskeyApi('users/show', { userIds: draft.data.visibleUserIds }).then(users => {
