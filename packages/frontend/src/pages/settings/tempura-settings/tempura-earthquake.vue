@@ -30,17 +30,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<div class="_gaps_s">
 					<SearchMarker :keywords="['earthquake', 'intensity', 'threshold']">
 						<MkPreferenceContainer k="earthquakeWarningIntensity">
-							<MkSelect v-model="earthquakeWarningIntensity">
+							<MkSelect v-model="earthquakeWarningIntensity" :items="earthquakeWarningIntensityItems">
 								<template #label><SearchLabel>{{ i18n.ts._earthquakeWarning.intensityThreshold }}</SearchLabel></template>
-								<option value="1">{{ i18n.tsx._earthquakeWarning.shindo({shindo: 1}) }}</option>
-								<option value="2">{{ i18n.tsx._earthquakeWarning.shindo({shindo: 2}) }}</option>
-								<option value="3">{{ i18n.tsx._earthquakeWarning.shindo({shindo: 3}) }}</option>
-								<option value="4">{{ i18n.tsx._earthquakeWarning.shindo({shindo: 4}) }}</option>
-								<option value="5-">{{ i18n.tsx._earthquakeWarning.shindo({shindo: "5-"}) }}</option>
-								<option value="5+">{{ i18n.tsx._earthquakeWarning.shindo({shindo: "5+"}) }}</option>
-								<option value="6-">{{ i18n.tsx._earthquakeWarning.shindo({shindo: "6-"}) }}</option>
-								<option value="6+">{{ i18n.tsx._earthquakeWarning.shindo({shindo: "6+"}) }}</option>
-								<option value="7">{{ i18n.tsx._earthquakeWarning.shindo({shindo: 7}) }}</option>
 								<template #caption>{{ i18n.ts._earthquakeWarning.intensityDescription }}</template>
 							</MkSelect>
 						</MkPreferenceContainer>
@@ -48,11 +39,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 					<SearchMarker :keywords="['earthquake', 'notification', 'display', 'style']">
 						<MkPreferenceContainer k="earthquakeWarningNotificationStyle">
-							<MkSelect v-model="earthquakeWarningNotificationStyle">
+							<MkSelect v-model="earthquakeWarningNotificationStyle" :items="earthquakeWarningNotificationStyleItems">
 								<template #label><SearchLabel>{{ i18n.ts._earthquakeWarning.notificationStyle }}</SearchLabel></template>
-								<option value="simple">{{ i18n.ts._earthquakeWarning.notificationStyleSimple }}</option>
-								<option value="standard">{{ i18n.ts._earthquakeWarning.notificationStyleStandard }}</option>
-								<option value="detailed">{{ i18n.ts._earthquakeWarning.notificationStyleDetailed }}</option>
 								<template #caption>{{ i18n.ts._earthquakeWarning.notificationStyleCaption }}</template>
 							</MkSelect>
 						</MkPreferenceContainer>
@@ -78,11 +66,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 					<SearchMarker :keywords="['earthquake', 'sound', 'type']">
 						<MkPreferenceContainer k="earthquakeWarningSoundType">
-							<MkSelect v-if="earthquakeWarningSound" v-model="earthquakeWarningSoundType">
+							<MkSelect v-if="earthquakeWarningSound" v-model="earthquakeWarningSoundType" :items="earthquakeWarningSoundTypeItems">
 								<template #label><SearchLabel>{{ i18n.ts._earthquakeWarning.soundType }}</SearchLabel></template>
-								<option value="auto">{{ i18n.ts._earthquakeWarning.soundTypeAuto }}</option>
-								<option value="eew">{{ i18n.ts._earthquakeWarning.soundTypeEew }}</option>
-								<option value="info">{{ i18n.ts._earthquakeWarning.soundTypeInfo }}</option>
 								<template #caption>{{ i18n.ts._earthquakeWarning.soundTypeCaption }}</template>
 							</MkSelect>
 						</MkPreferenceContainer>
@@ -98,12 +83,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 						<div v-if="enableEarthquakeWarningTts" class="_gaps_m">
 							<MkPreferenceContainer k="earthquakeWarningTtsVoice">
-								<MkSelect v-model="earthquakeWarningTtsVoice">
+								<MkSelect v-model="earthquakeWarningTtsVoice" :items="earthquakeWarningTtsVoiceItems">
 									<template #label><SearchLabel>{{ i18n.ts._earthquakeWarning.ttsVoice }}</SearchLabel></template>
-									<option :value="null">{{ i18n.ts._earthquakeWarning.ttsVoiceDefault }}</option>
-									<option v-for="voice in availableVoices" :key="voice.voiceURI" :value="voice.voiceURI">
-										{{ voice.name }} ({{ voice.lang }})
-									</option>
 									<template #caption>{{ i18n.ts._earthquakeWarning.ttsVoiceCaption }}</template>
 								</MkSelect>
 							</MkPreferenceContainer>
@@ -194,12 +175,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 					<SearchMarker :keywords="['earthquake', 'report', 'filter', 'mode']">
 						<MkPreferenceContainer k="earthquakeWarningReportFilterMode">
-							<MkSelect v-model="earthquakeWarningReportFilterMode">
+							<MkSelect v-model="earthquakeWarningReportFilterMode" :items="earthquakeWarningReportFilterModeItems">
 								<template #label><SearchLabel>{{ i18n.ts._earthquakeWarning.reportFilterMode }}</SearchLabel></template>
-								<option value="any">{{ i18n.ts._earthquakeWarning.reportFilterModeAny }}</option>
-								<option value="nth">{{ i18n.ts._earthquakeWarning.reportFilterModeNth }}</option>
-								<option value="final">{{ i18n.ts._earthquakeWarning.reportFilterModeFinal }}</option>
-								<option value="both">{{ i18n.ts._earthquakeWarning.reportFilterModeBoth }}</option>
 								<template #caption>{{ i18n.ts._earthquakeWarning.reportFilterModeCaption }}</template>
 							</MkSelect>
 						</MkPreferenceContainer>
@@ -251,11 +228,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 					<SearchMarker :keywords="['earthquake', 'log', 'level']">
 						<MkPreferenceContainer k="earthquakeWarningLogLevel">
-							<MkSelect v-model="earthquakeWarningLogLevel">
+							<MkSelect v-model="earthquakeWarningLogLevel" :items="earthquakeWarningLogLevelItems">
 								<template #label><SearchLabel>{{ i18n.ts._earthquakeWarning.loggingLevel }}</SearchLabel></template>
-								<option value="none">{{ i18n.ts._earthquakeWarning.loggingLevelNone }}</option>
-								<option value="basic">{{ i18n.ts._earthquakeWarning.loggingLevelBasic }}</option>
-								<option value="detailed">{{ i18n.ts._earthquakeWarning.loggingLevelDetailed }}</option>
 								<template #caption>{{ i18n.ts._earthquakeWarning.loggingLevelCaption }}</template>
 							</MkSelect>
 						</MkPreferenceContainer>
@@ -484,6 +458,54 @@ const earthquakeWarningFinalOnly = computed({
 		prefer.commit('earthquakeWarningFinalOnly', value);
 	},
 });
+
+const earthquakeWarningIntensityItems = computed(() => [
+	{ value: '1', label: i18n.tsx._earthquakeWarning.shindo({ shindo: 1 }) },
+	{ value: '2', label: i18n.tsx._earthquakeWarning.shindo({ shindo: 2 }) },
+	{ value: '3', label: i18n.tsx._earthquakeWarning.shindo({ shindo: 3 }) },
+	{ value: '4', label: i18n.tsx._earthquakeWarning.shindo({ shindo: 4 }) },
+	{ value: '5-', label: i18n.tsx._earthquakeWarning.shindo({ shindo: '5-' }) },
+	{ value: '5+', label: i18n.tsx._earthquakeWarning.shindo({ shindo: '5+' }) },
+	{ value: '6-', label: i18n.tsx._earthquakeWarning.shindo({ shindo: '6-' }) },
+	{ value: '6+', label: i18n.tsx._earthquakeWarning.shindo({ shindo: '6+' }) },
+	{ value: '7', label: i18n.tsx._earthquakeWarning.shindo({ shindo: 7 }) },
+]);
+
+const earthquakeWarningNotificationStyleItems = computed(() => [
+	{ value: 'simple', label: i18n.ts._earthquakeWarning.notificationStyleSimple },
+	{ value: 'standard', label: i18n.ts._earthquakeWarning.notificationStyleStandard },
+	{ value: 'detailed', label: i18n.ts._earthquakeWarning.notificationStyleDetailed },
+]);
+
+const earthquakeWarningSoundTypeItems = computed(() => [
+	{ value: 'auto', label: i18n.ts._earthquakeWarning.soundTypeAuto },
+	{ value: 'eew', label: i18n.ts._earthquakeWarning.soundTypeEew },
+	{ value: 'info', label: i18n.ts._earthquakeWarning.soundTypeInfo },
+]);
+
+const earthquakeWarningTtsVoiceItems = computed(() => [
+	{ value: null, label: i18n.ts._earthquakeWarning.ttsVoiceDefault },
+	...availableVoices.value.map((voice) => {
+		const displayName = voice.name ?? voice.voiceURI ?? voice.lang;
+		return {
+			value: voice.voiceURI,
+			label: `${displayName} (${voice.lang})`,
+		};
+	}),
+]);
+
+const earthquakeWarningReportFilterModeItems = computed(() => [
+	{ value: 'any', label: i18n.ts._earthquakeWarning.reportFilterModeAny },
+	{ value: 'nth', label: i18n.ts._earthquakeWarning.reportFilterModeNth },
+	{ value: 'final', label: i18n.ts._earthquakeWarning.reportFilterModeFinal },
+	{ value: 'both', label: i18n.ts._earthquakeWarning.reportFilterModeBoth },
+]);
+
+const earthquakeWarningLogLevelItems = computed(() => [
+	{ value: 'none', label: i18n.ts._earthquakeWarning.loggingLevelNone },
+	{ value: 'basic', label: i18n.ts._earthquakeWarning.loggingLevelBasic },
+	{ value: 'detailed', label: i18n.ts._earthquakeWarning.loggingLevelDetailed },
+]);
 
 /**
  * ログを表示する
