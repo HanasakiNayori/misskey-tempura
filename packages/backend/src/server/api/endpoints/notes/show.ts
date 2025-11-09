@@ -78,9 +78,16 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				throw new ApiError(meta.errors.contentRestrictedByServer);
 			}
 
-			return await this.noteEntityService.pack(note, me, {
+			const packedNote = await this.noteEntityService.pack(note, me, {
 				detail: true,
 			});
+
+			if (me == null) {
+				packedNote.deleteAt = undefined;
+				packedNote.deliveryTargets = undefined;
+			}
+
+			return packedNote;
 		});
 	}
 }
