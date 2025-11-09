@@ -90,7 +90,7 @@ import * as os from '@/os.js';
 import { i18n } from '@/i18n.js';
 import MkContainer from '@/components/MkContainer.vue';
 import MkDeleteScheduleEditor from '@/components/MkDeleteScheduleEditor.vue';
-import { bottomItemDef } from '@/utility/post-form.js';
+import { bottomItemDef, normalizePostFormActions } from '@/utility/post-form.js';
 import MkPreferenceContainer from '@/components/MkPreferenceContainer.vue';
 
 const useTextAreaAutoSize = prefer.model('useTextAreaAutoSize');
@@ -104,7 +104,7 @@ const chooseFileFromItems = [
 	{ value: 'old', label: i18n.ts._chooseFileFrom.old },
 ];
 
-const items = ref(prefer.s.postFormActions.map(x => ({
+const items = ref(normalizePostFormActions(prefer.s.postFormActions).map(x => ({
 	id: Math.random().toString(),
 	type: x,
 })));
@@ -144,7 +144,7 @@ function removeItem(type: keyof typeof bottomItemDef, ev: MouseEvent) {
 }
 
 async function save_postform() {
-	prefer.commit('postFormActions', items.value.map(x => x.type));
+	prefer.commit('postFormActions', normalizePostFormActions(items.value.map(x => x.type)));
 }
 
 async function reset_postform() {

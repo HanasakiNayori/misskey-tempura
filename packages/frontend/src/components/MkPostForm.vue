@@ -97,7 +97,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</div> -->
 	<footer :class="$style.footer">
 		<div :class="$style.footerLeft">
-			<template v-for="item in prefer.s.postFormActions">
+			<template v-for="item in normalizedPostFormActions">
 				<button v-if="!bottomItemActionDef[item].hide" :key="item" v-tooltip="bottomItemDef[item].title" class="_button" :class="[$style.footerButton, { [$style.footerButtonActive]: bottomItemActionDef[item].active }]" v-on="bottomItemActionDef[item].action ? { click: bottomItemActionDef[item].action } : {}">
 					<i class="ti" :class="bottomItemDef[item].icon"></i>
 				</button>
@@ -153,7 +153,7 @@ import { miLocalStorage } from '@/local-storage.js';
 import { claimAchievement } from '@/utility/achievements.js';
 import { emojiPicker } from '@/utility/emoji-picker.js';
 import { mfmFunctionPicker } from '@/utility/mfm-function-picker.js';
-import { bottomItemDef } from '@/utility/post-form.js';
+import { bottomItemDef, normalizePostFormActions } from '@/utility/post-form.js';
 import MkDeliveryTargetEditor from '@/components/MkDeliveryTargetEditor.vue';
 import { transformTextWithGemini } from '@/utility/tempura-script/text-transformations.js';
 import { prefer } from '@/preferences.js';
@@ -237,6 +237,7 @@ const serverDraftId = ref<string | null>(null);
 
 const dontShowOnLtl = computed(() => visibility.value === 'public_non_ltl');
 const postFormActions = getPluginHandlers('post_form_action');
+const normalizedPostFormActions = computed(() => normalizePostFormActions(prefer.r.postFormActions.value));
 
 const uploader = useUploader({
 	multiple: true,
