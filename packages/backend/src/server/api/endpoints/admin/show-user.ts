@@ -222,6 +222,10 @@ export const meta = {
 				type: 'string',
 				optional: false, nullable: true,
 			},
+			approved: {
+				type: 'boolean',
+				optional: false, nullable: false,
+			},
 		},
 	},
 } as const;

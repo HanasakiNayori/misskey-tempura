@@ -13353,6 +13353,7 @@ export interface operations {
                             roleId: string;
                         }[];
                         signupReason: string | null;
+                        approved: boolean;
                     };
                 };
             };

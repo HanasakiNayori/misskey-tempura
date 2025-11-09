@@ -13,11 +13,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<span class="name"><MkUserName class="name" :user="user"/></span>
 					<span class="sub"><span class="acct _monospace">@{{ acct(user) }}</span></span>
 					<span class="state">
-							<span v-if="!approved && !isSystem " class="silenced">{{ i18n.ts.notApproved }}</span>
-							<span v-if="approved && !user.host && !isSystem" class="moderator">{{ i18n.ts.approved }}</span>
+						<span v-if="!approved && !isSystem " class="silenced">{{ i18n.ts.notApproved }}</span>
+						<span v-if="approved && !user.host && !isSystem" class="moderator">{{ i18n.ts.approved }}</span>
 						<span v-if="suspended" class="suspended">Suspended</span>
 						<span v-if="silenced" class="silenced">Silenced</span>
-							<span v-if="administrator " class="suspended">Administrator</span>
+						<span v-if="administrator " class="suspended">Administrator</span>
 						<span v-if="moderator" class="moderator">Moderator</span>
 					</span>
 				</div>
@@ -51,11 +51,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<template #key>{{ i18n.ts.email }}</template>
 						<template #value><span class="_monospace">{{ info.email }}</span></template>
 					</MkKeyValue>
-						<MkKeyValue v-if="info" oneline>
-							<template #key>{{ i18n.ts.registerReason }}</template>
-							<!-- <template #value><span class="_monospace">{{ info.signupReason }}</span></template> -->
-							<template #value><div :class="$style.reason_box">{{ info.signupReason }}</div></template>
-						</MkKeyValue>
+					<MkKeyValue v-if="info" oneline>
+						<template #key>{{ i18n.ts.registerReason }}</template>
+						<!-- <template #value><span class="_monospace">{{ info.signupReason }}</span></template> -->
+						<template #value><div :class="$style.reason_box">{{ info.signupReason }}</div></template>
+					</MkKeyValue>
 				</template>
 			</div>
 
@@ -64,56 +64,56 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<template #caption>{{ i18n.ts.moderationNoteDescription }}</template>
 			</MkTextarea>
 
-				<FormSection>
-					<template #label>ActivityPub</template>
+			<FormSection>
+				<template #label>ActivityPub</template>
 
-					<div class="_gaps_m">
-						<div style="display: flex; flex-direction: column; gap: 1em;">
-							<MkKeyValue v-if="user.host" oneline>
-								<template #key>{{ i18n.ts.instanceInfo }}</template>
-								<template #value><MkA :to="`/instance-info/${user.host}`" class="_link">{{ user.host }} <i class="ti ti-chevron-right"></i></MkA></template>
-							</MkKeyValue>
-							<MkKeyValue v-else oneline>
-								<template #key>{{ i18n.ts.instanceInfo }}</template>
-								<template #value>(Local user)</template>
-							</MkKeyValue>
-							<MkKeyValue oneline>
-								<template #key>{{ i18n.ts.updatedAt }}</template>
-								<template #value><MkTime v-if="user.lastFetchedAt" mode="detail" :time="user.lastFetchedAt"/><span v-else>N/A</span></template>
-							</MkKeyValue>
-							<MkKeyValue v-if="ap" oneline>
-								<template #key>Type</template>
-								<template #value><span class="_monospace">{{ ap.type }}</span></template>
-							</MkKeyValue>
-						</div>
-
-						<MkButton v-if="user.host != null" @click="updateRemoteUser"><i class="ti ti-refresh"></i> {{ i18n.ts.updateRemoteUser }}</MkButton>
-
-						<MkFolder>
-							<template #label>Raw</template>
-
-							<MkObjectView v-if="ap" tall :value="ap">
-							</MkObjectView>
-						</MkFolder>
+				<div class="_gaps_m">
+					<div style="display: flex; flex-direction: column; gap: 1em;">
+						<MkKeyValue v-if="user.host" oneline>
+							<template #key>{{ i18n.ts.instanceInfo }}</template>
+							<template #value><MkA :to="`/instance-info/${user.host}`" class="_link">{{ user.host }} <i class="ti ti-chevron-right"></i></MkA></template>
+						</MkKeyValue>
+						<MkKeyValue v-else oneline>
+							<template #key>{{ i18n.ts.instanceInfo }}</template>
+							<template #value>(Local user)</template>
+						</MkKeyValue>
+						<MkKeyValue oneline>
+							<template #key>{{ i18n.ts.updatedAt }}</template>
+							<template #value><MkTime v-if="user.lastFetchedAt" mode="detail" :time="user.lastFetchedAt"/><span v-else>N/A</span></template>
+						</MkKeyValue>
+						<MkKeyValue v-if="ap" oneline>
+							<template #key>Type</template>
+							<template #value><span class="_monospace">{{ ap.type }}</span></template>
+						</MkKeyValue>
 					</div>
-				</FormSection>
+
+					<MkButton v-if="user.host != null" @click="updateRemoteUser"><i class="ti ti-refresh"></i> {{ i18n.ts.updateRemoteUser }}</MkButton>
+
+					<MkFolder>
+						<template #label>Raw</template>
+
+						<MkObjectView v-if="ap" tall :value="ap">
+						</MkObjectView>
+					</MkFolder>
+				</div>
+			</FormSection>
 
 			<FormSection v-if="!isSystem">
 				<div class="_gaps">
 					<MkSwitch v-model="suspended" @update:modelValue="toggleSuspend">{{ i18n.ts.suspend }}</MkSwitch>
 					<div class="_buttons">
 						<div v-if="user.host == null" inline style="margin-right: 8px;" class="_buttons">
-								<MkButton @click="resetPassword"><i class="ti ti-key"></i> {{ i18n.ts.resetPassword }}</MkButton>
-								<MkButton danger @click="regenerateLoginToken"><i class="ti ti-refresh"></i> {{ i18n.ts.regenerateLoginToken }}</MkButton>
-								<MkButton danger @click="sendNotification"><i class="ti ti-bell"></i> {{ i18n.ts.sendNotification }}</MkButton>
-								<MkButton inline danger @click="updateUserName"><i class="ti ti-user-edit"></i> {{ i18n.ts.rename }}</MkButton>
-							</div>
-							<MkButton inline danger @click="unsetUserAvatar"><i class="ti ti-user-circle"></i> {{ i18n.ts.unsetUserAvatar }}</MkButton>
-							<MkButton inline danger @click="unsetUserBanner"><i class="ti ti-photo"></i> {{ i18n.ts.unsetUserBanner }}</MkButton>
-							<MkButton inline danger @click="deleteAllFiles"><i class="ti ti-trash"></i> {{ i18n.ts.deleteAllFiles }}</MkButton>
-							<div v-if="user.host" inline style="margin-right: 8px;" class="_buttons">
-								<MkButton danger @click="dropAllNotes"><i class="ti ti-trash"></i> {{ i18n.ts.dropAllNotes }}</MkButton>
-							</div>
+							<MkButton @click="resetPassword"><i class="ti ti-key"></i> {{ i18n.ts.resetPassword }}</MkButton>
+							<MkButton danger @click="regenerateLoginToken"><i class="ti ti-refresh"></i> {{ i18n.ts.regenerateLoginToken }}</MkButton>
+							<MkButton danger @click="sendNotification"><i class="ti ti-bell"></i> {{ i18n.ts.sendNotification }}</MkButton>
+							<MkButton inline danger @click="updateUserName"><i class="ti ti-user-edit"></i> {{ i18n.ts.rename }}</MkButton>
+						</div>
+						<MkButton inline danger @click="unsetUserAvatar"><i class="ti ti-user-circle"></i> {{ i18n.ts.unsetUserAvatar }}</MkButton>
+						<MkButton inline danger @click="unsetUserBanner"><i class="ti ti-photo"></i> {{ i18n.ts.unsetUserBanner }}</MkButton>
+						<MkButton inline danger @click="deleteAllFiles"><i class="ti ti-trash"></i> {{ i18n.ts.deleteAllFiles }}</MkButton>
+						<div v-if="user.host" inline style="margin-right: 8px;" class="_buttons">
+							<MkButton danger @click="dropAllNotes"><i class="ti ti-trash"></i> {{ i18n.ts.dropAllNotes }}</MkButton>
+						</div>
 					</div>
 
 					<MkFolder>
@@ -225,6 +225,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { computed, defineAsyncComponent, watch, ref, markRaw } from 'vue';
 import * as Misskey from 'misskey-js';
 import { url } from '@@/js/config.js';
+import type { ChartSrc } from '@/components/MkChart.vue';
 import MkChart from '@/components/MkChart.vue';
 import MkObjectView from '@/components/MkObjectView.vue';
 import MkTextarea from '@/components/MkTextarea.vue';
@@ -247,7 +248,6 @@ import { ensureSignin, iAmAdmin, iAmModerator } from '@/i.js';
 import MkRolePreview from '@/components/MkRolePreview.vue';
 import MkPagination from '@/components/MkPagination.vue';
 import { Paginator } from '@/utility/paginator.js';
-import type { ChartSrc } from '@/components/MkChart.vue';
 
 const $i = ensureSignin();
 
@@ -267,7 +267,7 @@ const {
 } = useMkSelect({
 	items: [
 		{ label: i18n.ts.notes, value: 'per-user-notes' },
-],
+	],
 	initialValue: 'per-user-notes',
 });
 const user = ref(result.user);
@@ -277,7 +277,7 @@ const ap = ref<any>(null);
 const administrator = ref(false);
 const moderator = ref(info.value.isModerator);
 const silenced = ref(info.value.isSilenced);
-const approved = ref(false);
+const approved = ref(info.value.approved);
 const suspended = ref(info.value.isSuspended);
 const isSystem = ref(user.value.host == null && user.value.username.includes('.'));
 const moderationNote = ref(info.value.moderationNote);
