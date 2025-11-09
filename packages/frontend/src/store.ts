@@ -63,8 +63,6 @@ export const store = markRaw(new Pizzax('base', {
 			'hashtags',
 			'plugins',
 			'addMfmFunction',
-			'scheduleNote',
-			'schedulePostList',
 		],
 	},
 	visibility: {
@@ -433,7 +431,7 @@ export const store = markRaw(new Pizzax('base', {
 			avatar: false,
 			urlPreview: false,
 			code: false,
-		} as Record<string, boolean>,
+		},
 	},
 	enableSeasonalScreenEffect: {
 		where: 'device',
@@ -733,7 +731,7 @@ export class ColdDeviceStorage {
 		lightTheme, // TODO: 消す(preferに移行済みのため)
 		darkTheme, // TODO: 消す(preferに移行済みのため)
 		syncDeviceDarkMode: true, // TODO: 消す(preferに移行済みのため)
-		plugins: [] as Plugin[], // TODO: 消す(preferに移行済みのため)
+		plugins: [] as (Omit<Plugin, 'installId'> & { id: string })[], // TODO: 消す(preferに移行済みのため)
 	};
 
 	public static watchers: Watcher[] = [];

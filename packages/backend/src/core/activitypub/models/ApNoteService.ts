@@ -311,7 +311,6 @@ export class ApNoteService {
 		try {
 			return await this.noteCreateService.create(actor, {
 				createdAt: note.published ? new Date(note.published) : null,
-				deleteAt: note._misskey_deleteAt ? new Date(note._misskey_deleteAt) : undefined,
 				files,
 				reply,
 				renote: quote,

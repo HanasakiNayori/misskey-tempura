@@ -60,7 +60,7 @@ import MkSelect from '@/components/MkSelect.vue';
 import MkDeleteScheduleEditor from '@/components/MkDeleteScheduleEditor.vue';
 import FormSlot from '@/components/form/slot.vue';
 import MkContainer from '@/components/MkContainer.vue';
-import { bottomItemDef } from '@/utility/post-form.js';
+import { bottomItemDef, normalizePostFormActions } from '@/utility/post-form.js';
 import * as os from '@/os.js';
 import { store } from '@/store.js';
 import { prefer } from '@/preferences.js';
@@ -79,7 +79,7 @@ watch(scheduledNoteDelete, () => {
 
 const Sortable = defineAsyncComponent(() => import('vuedraggable').then(x => x.default));
 
-const items = ref(prefer.s.postFormActions.map(x => ({
+const items = ref(normalizePostFormActions(prefer.s.postFormActions).map(x => ({
 	id: Math.random().toString(),
 	type: x,
 })));
@@ -119,7 +119,7 @@ function removeItem(type: keyof typeof bottomItemDef, ev: MouseEvent) {
 }
 
 async function save() {
-	prefer.commit('postFormActions', items.value.map(x => x.type));
+	prefer.commit('postFormActions', normalizePostFormActions(items.value.map(x => x.type)));
 }
 
 async function reset() {

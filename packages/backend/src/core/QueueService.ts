@@ -26,20 +26,19 @@ import type {
 	SystemWebhookDeliverJobData,
 	ThinUser,
 	UserWebhookDeliverJobData,
-	ScheduleNotePostJobData,
 	ScheduledNoteDeleteJobData,
 } from '../queue/types.js';
 import type {
 	DbQueue,
 	DeliverQueue,
 	EndedPollNotificationQueue,
+	PostScheduledNoteQueue,
 	InboxQueue,
 	ObjectStorageQueue,
 	RelationshipQueue,
 	SystemQueue,
 	SystemWebhookDeliverQueue,
 	UserWebhookDeliverQueue,
-	ScheduleNotePostQueue,
 	ScheduledNoteDeleteQueue,
 } from './QueueModule.js';
 import type httpSignature from '@peertube/http-signature';
@@ -48,6 +47,7 @@ import type * as Bull from 'bullmq';
 export const QUEUE_TYPES = [
 	'system',
 	'endedPollNotification',
+	'postScheduledNote',
 	'deliver',
 	'inbox',
 	'db',
@@ -55,7 +55,6 @@ export const QUEUE_TYPES = [
 	'objectStorage',
 	'userWebhookDeliver',
 	'systemWebhookDeliver',
-	'scheduleNotePost',
 	'scheduledNoteDelete',
 ] as const;
 
@@ -106,6 +105,7 @@ export class QueueService {
 
 		@Inject('queue:system') public systemQueue: SystemQueue,
 		@Inject('queue:endedPollNotification') public endedPollNotificationQueue: EndedPollNotificationQueue,
+		@Inject('queue:postScheduledNote') public postScheduledNoteQueue: PostScheduledNoteQueue,
 		@Inject('queue:deliver') public deliverQueue: DeliverQueue,
 		@Inject('queue:inbox') public inboxQueue: InboxQueue,
 		@Inject('queue:db') public dbQueue: DbQueue,
@@ -113,7 +113,6 @@ export class QueueService {
 		@Inject('queue:objectStorage') public objectStorageQueue: ObjectStorageQueue,
 		@Inject('queue:userWebhookDeliver') public userWebhookDeliverQueue: UserWebhookDeliverQueue,
 		@Inject('queue:systemWebhookDeliver') public systemWebhookDeliverQueue: SystemWebhookDeliverQueue,
-		@Inject('queue:scheduleNotePost') public scheduleNotePostQueue: ScheduleNotePostQueue,
 		@Inject('queue:scheduledNoteDelete') public scheduledNoteDeleteQueue: ScheduledNoteDeleteQueue,
 	) {
 		for (const def of REPEATABLE_SYSTEM_JOB_DEF) {
@@ -786,28 +785,6 @@ export class QueueService {
 	}
 
 	/**
-	 * @see ScheduleNotePostJobData
-	 * @see ScheduleNotePostProcessorService
-	 */
-	@bindThis
-	public scheduleNotePost(scheduleNoteId: string, scheduledAt: number): Promise<Bull.Job> {
-		const delay = scheduledAt - Date.now();
-		return this.scheduleNotePostQueue.add(String(delay), {
-			scheduleNoteId,
-		}, {
-			delay,
-			removeOnComplete: {
-				age: 3600 * 24 * 7, // keep up to 7 days
-				count: 30,
-			},
-			removeOnFail: {
-				age: 3600 * 24 * 7, // keep up to 7 days
-				count: 100,
-			},
-		});
-	}
-
-	/**
 	 * @see ScheduledNoteDeleteJobData
 	 * @see ScheduledNoteDeleteProcessorService
 	 */
@@ -835,6 +812,7 @@ export class QueueService {
 		switch (type) {
 			case 'system': return this.systemQueue;
 			case 'endedPollNotification': return this.endedPollNotificationQueue;
+			case 'postScheduledNote': return this.postScheduledNoteQueue;
 			case 'deliver': return this.deliverQueue;
 			case 'inbox': return this.inboxQueue;
 			case 'db': return this.dbQueue;
@@ -842,7 +820,6 @@ export class QueueService {
 			case 'objectStorage': return this.objectStorageQueue;
 			case 'userWebhookDeliver': return this.userWebhookDeliverQueue;
 			case 'systemWebhookDeliver': return this.systemWebhookDeliverQueue;
-			case 'scheduleNotePost': return this.scheduleNotePostQueue;
 			case 'scheduledNoteDelete': return this.scheduledNoteDeleteQueue;
 			default: throw new Error(`Unrecognized queue type: ${type}`);
 		}

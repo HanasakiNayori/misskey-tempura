@@ -89,12 +89,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 				<SearchMarker :keywords="['reaction', 'count', 'hide']">
 					<MkPreferenceContainer k="hideReactionCount">
-						<MkSelect v-model="hideReactionCount">
+						<MkSelect v-model="hideReactionCount" :items="hideReactionCountItems">
 							<template #label><SearchLabel>{{ i18n.ts.hideReactionCount }}</SearchLabel></template>
-							<option value="none">{{ i18n.ts._hideReactionCount.none }}</option>
-							<option value="self">{{ i18n.ts._hideReactionCount.self }}</option>
-							<option value="others">{{ i18n.ts._hideReactionCount.others }}</option>
-							<option value="all">{{ i18n.ts._hideReactionCount.all }}</option>
 						</MkSelect>
 					</MkPreferenceContainer>
 				</SearchMarker>
@@ -131,6 +127,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkSwitch from '@/components/MkSwitch.vue';
 import MkSelect from '@/components/MkSelect.vue';
@@ -156,6 +153,13 @@ const enableReactionConfirm = prefer.model('enableReactionConfirm');
 const enableLikeConfirm = prefer.model('enableLikeConfirm');
 const showInstanceTickerSoftwareName = prefer.model('showInstanceTickerSoftwareName');
 const showInstanceTickerVersion = prefer.model('showInstanceTickerVersion');
+
+const hideReactionCountItems = computed(() => [
+	{ value: 'none', label: i18n.ts._hideReactionCount.none },
+	{ value: 'self', label: i18n.ts._hideReactionCount.self },
+	{ value: 'others', label: i18n.ts._hideReactionCount.others },
+	{ value: 'all', label: i18n.ts._hideReactionCount.all },
+]);
 
 function chooseNewReaction(ev: MouseEvent) {
 	os.pickEmoji(getHTMLElement(ev), {

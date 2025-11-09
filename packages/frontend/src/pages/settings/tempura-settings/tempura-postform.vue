@@ -37,14 +37,14 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 			<div :class="$style.label"><SearchLabel>{{ i18n.ts.postFormBottomSettingsDescription }}</SearchLabel></div>
 
-			<SearchMarker :keywords="['post', 'form', 'compose']">
+			<!-- <SearchMarker :keywords="['post', 'form', 'compose']">
 				<MkPreferenceContainer k="defaultScheduledNoteDeleteTime">
 					<div :class="$style.label">
 						<SearchLabel>{{ i18n.ts.defaultScheduledNoteDeleteTime }}</SearchLabel>
 					</div>
 					<MkDeleteScheduleEditor v-model="scheduledNoteDelete" :afterOnly="true"/>
 				</MkPreferenceContainer>
-			</SearchMarker>
+			</SearchMarker> -->
 
 			<SearchMarker :keywords="['post', 'form', 'compose']">
 				<MkPreferenceContainer k="defaultScheduledNoteDelete">
@@ -65,11 +65,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 			<SearchMarker :keywords="['post', 'form', 'compose']">
 				<MkPreferenceContainer k="chooseFileFrom">
-					<MkSelect v-model="chooseFileFrom">
+					<MkSelect v-model="chooseFileFrom" :items="chooseFileFromItems">
 						<template #label><SearchLabel>{{ i18n.ts.chooseFileFrom }}</SearchLabel></template>
 						<template #caption><SearchLabel>{{ i18n.ts.chooseFileFromDescription }}</SearchLabel></template>
-						<option value="new">{{ i18n.ts._chooseFileFrom.new }}</option>
-						<option value="old">{{ i18n.ts._chooseFileFrom.old }}</option>
 					</MkSelect>
 				</MkPreferenceContainer>
 			</SearchMarker>
@@ -92,16 +90,21 @@ import * as os from '@/os.js';
 import { i18n } from '@/i18n.js';
 import MkContainer from '@/components/MkContainer.vue';
 import MkDeleteScheduleEditor from '@/components/MkDeleteScheduleEditor.vue';
-import { bottomItemDef } from '@/utility/post-form.js';
+import { bottomItemDef, normalizePostFormActions } from '@/utility/post-form.js';
 import MkPreferenceContainer from '@/components/MkPreferenceContainer.vue';
 
 const useTextAreaAutoSize = prefer.model('useTextAreaAutoSize');
 const Sortable = defineAsyncComponent(() => import('vuedraggable').then(x => x.default));
 const defaultScheduledNoteDelete = prefer.model('defaultScheduledNoteDelete');
-const scheduledNoteDelete = ref({ deleteAt: null, deleteAfter: prefer.s.defaultScheduledNoteDeleteTime, isValid: true });
+const scheduledNoteDelete = ref({ deleteAt: null, deleteAfter: prefer.s.defaultScheduledNoteDeleteTime, isValid: true, isScheduledForPrivate: false });
 const chooseFileFrom = prefer.model('chooseFileFrom');
 
-const items = ref(prefer.s.postFormActions.map(x => ({
+const chooseFileFromItems = [
+	{ value: 'new', label: i18n.ts._chooseFileFrom.new },
+	{ value: 'old', label: i18n.ts._chooseFileFrom.old },
+];
+
+const items = ref(normalizePostFormActions(prefer.s.postFormActions).map(x => ({
 	id: Math.random().toString(),
 	type: x,
 })));
@@ -117,7 +120,7 @@ async function addItem() {
 	const { canceled, result: item } = await os.select({
 		title: i18n.ts.addItem,
 		items: bottomItem.map(k => ({
-			value: k, text: bottomItemDef[k].title,
+			value: k, label: bottomItemDef[k].title,
 		})),
 	});
 	if (canceled || item == null) return;
@@ -141,7 +144,7 @@ function removeItem(type: keyof typeof bottomItemDef, ev: MouseEvent) {
 }
 
 async function save_postform() {
-	prefer.commit('postFormActions', items.value.map(x => x.type));
+	prefer.commit('postFormActions', normalizePostFormActions(items.value.map(x => x.type)));
 }
 
 async function reset_postform() {

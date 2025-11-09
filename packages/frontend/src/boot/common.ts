@@ -111,7 +111,12 @@ export async function common(createVue: () => Promise<App<Element>>) {
 
 		// 比較後にバージョンを更新し、テーマキャッシュをクリアする
 		miLocalStorage.setItem('lastVersion', version);
-		miLocalStorage.removeItem('theme');
+
+		try { // 変なバージョン文字列来るとcompareVersionsでエラーになるため
+			if (lastVersion != null && compareVersions(version, lastVersion) === 1) {
+				isClientUpdated = true;
+			}
+		} catch (err) { /* empty */ }
 	}
 	//#endregion
 
@@ -186,7 +191,21 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	}
 	//#endregion
 
+	//#region Sync dark mode
+	if (prefer.s.syncDeviceDarkMode) {
+		store.set('darkMode', isDeviceDarkmode());
+	}
+
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (mql) => {
+		if (prefer.s.syncDeviceDarkMode) {
+			store.set('darkMode', mql.matches);
+		}
+	});
+	//#endregion
+
 	// NOTE: この処理は必ずクライアント更新チェック処理より後に来ること(テーマ再構築のため)
+	// NOTE: この処理は必ずダークモード判定処理より後に来ること(初回のテーマ適用のため)
+	// see: https://github.com/misskey-dev/misskey/issues/16562
 	watch(store.r.darkMode, (darkMode) => {
 		const theme = (() => {
 			if (darkMode) {
@@ -197,7 +216,7 @@ export async function common(createVue: () => Promise<App<Element>>) {
 		})();
 
 		applyTheme(theme);
-	}, { immediate: isSafeMode || miLocalStorage.getItem('theme') == null });
+	}, { immediate: true });
 
 	window.document.documentElement.dataset.colorScheme = store.s.darkMode ? 'dark' : 'light';
 
@@ -225,26 +244,6 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	watch(() => prefer.s.customFont ?? '', (font) => {
 		applyFont(font);
 	});
-	}
-
-	//#region Sync dark mode
-	if (prefer.s.syncDeviceDarkMode) {
-		store.set('darkMode', isDeviceDarkmode());
-	}
-
-	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (mql) => {
-		if (prefer.s.syncDeviceDarkMode) {
-			store.set('darkMode', mql.matches);
-		}
-	});
-	//#endregion
-
-	if (!isSafeMode) {
-		if (prefer.s.darkTheme && store.s.darkMode) {
-			if (miLocalStorage.getItem('themeId') !== prefer.s.darkTheme.id) applyTheme(prefer.s.darkTheme);
-		} else if (prefer.s.lightTheme && !store.s.darkMode) {
-			if (miLocalStorage.getItem('themeId') !== prefer.s.lightTheme.id) applyTheme(prefer.s.lightTheme);
-		}
 
 		fetchInstanceMetaPromise.then(() => {
 			// TODO: instance.defaultLightTheme/instance.defaultDarkThemeが不正な形式だった場合のケア

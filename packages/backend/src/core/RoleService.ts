@@ -37,7 +37,6 @@ export type RolePolicies = {
 	ltlAvailable: boolean;
 	canPublicNote: boolean;
 	canHomeNote: boolean;
-	scheduleNoteMax: number;
 	mentionLimit: number;
 	canInvite: boolean;
 	inviteLimit: number;
@@ -73,6 +72,7 @@ export type RolePolicies = {
 	chatAvailability: 'available' | 'readonly' | 'unavailable';
 	uploadableFileTypes: string[];
 	noteDraftLimit: number;
+	scheduledNoteLimit: number;
 	watermarkAvailable: boolean;
 	canAddRoles: boolean;
 	canCreateRole: boolean;
@@ -95,7 +95,6 @@ export const DEFAULT_POLICIES: RolePolicies = {
 	ltlAvailable: true,
 	canPublicNote: true,
 	canHomeNote: true,
-	scheduleNoteMax: 5,
 	mentionLimit: 20,
 	canInvite: false,
 	inviteLimit: 0,
@@ -123,20 +122,21 @@ export const DEFAULT_POLICIES: RolePolicies = {
 	userEachUserListsLimit: 50,
 	rateLimitFactor: 1,
 	avatarDecorationLimit: 1,
-	canImportAntennas: true,
-	canImportBlocking: true,
-	canImportFollowing: true,
-	canImportMuting: true,
-	canImportUserLists: true,
+	canImportAntennas: false,
+	canImportBlocking: false,
+	canImportFollowing: false,
+	canImportMuting: false,
+	canImportUserLists: false,
 	chatAvailability: 'available',
 	uploadableFileTypes: [
-		'text/plain',
+		'text/*',
 		'application/json',
 		'image/*',
 		'video/*',
 		'audio/*',
 	],
 	noteDraftLimit: 10,
+	scheduledNoteLimit: 1,
 	watermarkAvailable: true,
 	canAddRoles: true,
 	canCreateRole: true,
@@ -491,7 +491,6 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 			ltlAvailable: calc('ltlAvailable', vs => vs.some(v => v === true)),
 			canPublicNote: calc('canPublicNote', vs => vs.some(v => v === true)),
 			canHomeNote: calc('canHomeNote', vs => vs.some(v => v === true)),
-			scheduleNoteMax: calc('scheduleNoteMax', vs => Math.max(...vs)),
 			mentionLimit: calc('mentionLimit', vs => Math.max(...vs)),
 			canInvite: calc('canInvite', vs => vs.some(v => v === true)),
 			inviteLimit: calc('inviteLimit', vs => Math.max(...vs)),
@@ -536,6 +535,7 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 				return [...set];
 			}),
 			noteDraftLimit: calc('noteDraftLimit', vs => Math.max(...vs)),
+			scheduledNoteLimit: calc('scheduledNoteLimit', vs => Math.max(...vs)),
 			watermarkAvailable: calc('watermarkAvailable', vs => vs.some(v => v === true)),
 			canAddRoles: calc('canAddRoles', vs => vs.some(v => v === true)),
 			canCreateRole: calc('canCreateRole', vs => vs.some(v => v === true)),

@@ -13,6 +13,8 @@
  * quote - 投稿が引用Renoteされた
  * reaction - 投稿にリアクションされた
  * pollEnded - 自分のアンケートもしくは自分が投票したアンケートが終了した
+ * scheduledNotePosted - 予約したノートが投稿された
+ * scheduledNotePostFailed - 予約したノートの投稿に失敗した
  * receiveFollowRequest - フォローリクエストされた
  * followRequestAccepted - 自分の送ったフォローリクエストが承認された
  * followRequestRejected - 自分の送ったフォローリクエストが拒否された
@@ -25,8 +27,6 @@
  * login - ログイン
  * loginFailed - ログインに失敗
  * createToken - トークン作成
- * scheduledNotePosted - 予約投稿をノート
- * scheduledNoteFailed - 予約投稿に失敗
  * app - アプリ通知
  * test - テスト通知（サーバー側）
  */
@@ -40,6 +40,8 @@ export const notificationTypes = [
 	'quote',
 	'reaction',
 	'pollEnded',
+	'scheduledNotePosted',
+	'scheduledNotePostFailed',
 	'receiveFollowRequest',
 	'followRequestAccepted',
 	'followRequestRejected',
@@ -52,8 +54,6 @@ export const notificationTypes = [
 	'login',
 	'loginFailed',
 	'createToken',
-	'scheduledNotePosted',
-	'scheduledNoteFailed',
 	'app',
 	'test',
 ] as const;

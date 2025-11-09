@@ -124,12 +124,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</SearchMarker>
 
 			<SearchMarker :keywords="['direct message', 'specified', 'note', 'receive']">
-				<MkSelect v-model="receiveSpecifiedNotesFrom" @update:modelValue="save_privacy()">
+				<MkSelect v-model="receiveSpecifiedNotesFrom" :items="receiveSpecifiedNotesFromItems" @update:modelValue="save_privacy()">
 					<template #label><SearchLabel>{{ i18n.ts.receiveSpecifiedNotesFrom }}</SearchLabel></template>
 					<template #caption><SearchKeyword>{{ i18n.ts.receiveSpecifiedNotesFromDescription }}</SearchKeyword></template>
-					<option value="all">{{ i18n.ts._receiveSpecifiedNotesFrom.all }}</option>
-					<option value="following">{{ i18n.ts._receiveSpecifiedNotesFrom.following }}</option>
-					<option value="nobody">{{ i18n.ts._receiveSpecifiedNotesFrom.nobody }}</option>
 				</MkSelect>
 			</SearchMarker>
 		</div>
@@ -161,6 +158,12 @@ const hidePublicNotes = ref($i.hidePublicNotes);
 const hideHomeNotes = ref($i.hideHomeNotes);
 const hideLocalOnlyNotes = ref($i.hideLocalOnlyNotes);
 const receiveSpecifiedNotesFrom = ref($i.receiveSpecifiedNotesFrom ?? 'all');
+
+const receiveSpecifiedNotesFromItems = [
+	{ value: 'all', label: i18n.ts._receiveSpecifiedNotesFrom.all },
+	{ value: 'following', label: i18n.ts._receiveSpecifiedNotesFrom.following },
+	{ value: 'nobody', label: i18n.ts._receiveSpecifiedNotesFrom.nobody },
+];
 
 function save_privacy() {
 	misskeyApi('i/update', {

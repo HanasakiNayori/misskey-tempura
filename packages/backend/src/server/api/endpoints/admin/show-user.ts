@@ -139,6 +139,8 @@ export const meta = {
 					quote: { optional: true, ...notificationRecieveConfig },
 					reaction: { optional: true, ...notificationRecieveConfig },
 					pollEnded: { optional: true, ...notificationRecieveConfig },
+					scheduledNotePosted: { optional: true, ...notificationRecieveConfig },
+					scheduledNotePostFailed: { optional: true, ...notificationRecieveConfig },
 					receiveFollowRequest: { optional: true, ...notificationRecieveConfig },
 					followRequestAccepted: { optional: true, ...notificationRecieveConfig },
 					followRequestRejected: { optional: true, ...notificationRecieveConfig },
@@ -219,6 +221,10 @@ export const meta = {
 			signupReason: {
 				type: 'string',
 				optional: false, nullable: true,
+			},
+			approved: {
+				type: 'boolean',
+				optional: false, nullable: false,
 			},
 		},
 	},

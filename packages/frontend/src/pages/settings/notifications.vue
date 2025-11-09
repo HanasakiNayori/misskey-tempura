@@ -16,7 +16,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkFolder v-for="type in notificationTypes.filter(x => !nonConfigurableNotificationTypes.includes(x))" :key="type">
 					<template #label>
 						{{ i18n.ts._notification._types[type] }}
-						<span v-if="['unfollow', 'followRequestRejected', 'blocked', 'unblocked', 'scheduledNotePosted', 'scheduledNoteFailed'].includes(type)" class="_beta">{{ i18n.ts.originalFeature }}</span>
+						<span v-if="['unfollow', 'followRequestRejected', 'blocked', 'unblocked'].includes(type)" class="_beta">{{ i18n.ts.originalFeature }}</span>
 					</template>
 					<template #suffix>
 						{{
@@ -88,7 +88,7 @@ const $i = ensureSignin();
 
 const nonConfigurableNotificationTypes = ['note', 'roleAssigned', 'followRequestAccepted', 'followRequestRejected', 'test', 'exportCompleted'] satisfies (typeof notificationTypes[number])[] as string[];
 
-const onlyOnOrOffNotificationTypes = ['app', 'achievementEarned', 'login', 'loginFailed', 'createToken'] satisfies (typeof notificationTypes[number])[] as string[];
+const onlyOnOrOffNotificationTypes = ['app', 'achievementEarned', 'login', 'loginFailed', 'createToken', 'scheduledNotePosted', 'scheduledNotePostFailed'] satisfies (typeof notificationTypes[number])[] as string[];
 
 const allowButton = useTemplateRef('allowButton');
 const pushRegistrationInServer = computed(() => allowButton.value?.pushRegistrationInServer);
