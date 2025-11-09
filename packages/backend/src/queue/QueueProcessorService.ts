@@ -92,7 +92,6 @@ export class QueueProcessorService implements OnApplicationShutdown {
 	private objectStorageQueueWorker: Bull.Worker;
 	private endedPollNotificationQueueWorker: Bull.Worker;
 	private postScheduledNoteQueueWorker: Bull.Worker;
-	private schedulerNotePostQueueWorker: Bull.Worker;
 	private scheduledNoteDeleteQueueWorker: Bull.Worker;
 
 	constructor(
@@ -577,7 +576,6 @@ export class QueueProcessorService implements OnApplicationShutdown {
 			this.objectStorageQueueWorker.run(),
 			this.endedPollNotificationQueueWorker.run(),
 			this.postScheduledNoteQueueWorker.run(),
-			this.schedulerNotePostQueueWorker.run(),
 			this.scheduledNoteDeleteQueueWorker.run(),
 		]);
 	}
@@ -595,7 +593,6 @@ export class QueueProcessorService implements OnApplicationShutdown {
 			this.objectStorageQueueWorker.close(),
 			this.endedPollNotificationQueueWorker.close(),
 			this.postScheduledNoteQueueWorker.close(),
-			this.schedulerNotePostQueueWorker.close(),
 			this.scheduledNoteDeleteQueueWorker.close(),
 		]);
 	}
