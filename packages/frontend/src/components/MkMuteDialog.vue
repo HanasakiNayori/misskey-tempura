@@ -10,11 +10,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 		<section>
 			<div>
-				<MkSelect v-model="expiration" small>
+				<MkSelect v-model="expiration" small :items="expirationItems">
 					<template #label>{{ i18n.ts._poll.expiration }}</template>
-					<option value="at">{{ i18n.ts._poll.at }}</option>
-					<option value="after">{{ i18n.ts._poll.after }}</option>
-					<option value="indefinitely">{{ i18n.ts.indefinitely }}</option>
 				</MkSelect>
 				<section v-if="expiration === 'at'">
 					<MkInput v-model="atDate" small type="date" class="input">
@@ -28,11 +25,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<MkInput v-model="after" small type="number" class="input">
 						<template #label>{{ i18n.ts._poll.duration }}</template>
 					</MkInput>
-					<MkSelect v-model="unit" small>
-						<option value="minute">{{ i18n.ts._time.minute }}</option>
-						<option value="hour">{{ i18n.ts._time.hour }}</option>
-						<option value="day">{{ i18n.ts._time.day }}</option>
-					</MkSelect>
+				<MkSelect v-model="unit" small :items="unitItems" />
 				</section>
 			</div>
 		</section>
@@ -46,7 +39,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, useTemplateRef } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 import MkInput from './MkInput.vue';
 import MkSelect from './MkSelect.vue';
 import MkButton from './MkButton.vue';
@@ -67,6 +60,16 @@ const atDate = ref(formatDateTimeString(addTime(new Date(), 1, 'day'), 'yyyy-MM-
 const atTime = ref('00:00');
 const after = ref(10);
 const unit = ref<'minute' | 'hour' | 'day'>('minute');
+const expirationItems = computed(() => [
+	{ value: 'at', label: i18n.ts._poll.at },
+	{ value: 'after', label: i18n.ts._poll.after },
+	{ value: 'indefinitely', label: i18n.ts.indefinitely },
+]);
+const unitItems = computed(() => [
+	{ value: 'minute', label: i18n.ts._time.minute },
+	{ value: 'hour', label: i18n.ts._time.hour },
+	{ value: 'day', label: i18n.ts._time.day },
+]);
 
 const calcAt = () => {
 	return new Date(`${atDate.value} ${atTime.value}`).getTime();

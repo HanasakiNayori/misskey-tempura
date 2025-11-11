@@ -29,11 +29,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<div class="_gaps_m">
 				<FormSection>
 					<template #label><i class="ti ti-forms"></i> {{ i18n.ts._contactForm._userForm.category }}</template>
-					<MkSelect v-model="category" :required="true">
-						<option v-for="option in categoryOptions" :key="option.value" :value="option.value">
-							{{ option.label }}
-						</option>
-					</MkSelect>
+				<MkSelect v-model="category" :required="true" :items="categoryOptions"/>
 				</FormSection>
 
 				<FormSection>

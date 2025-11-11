@@ -12,20 +12,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</MkTip>
 
 			<div :class="$style.inputs" class="_gaps">
-				<MkSelect v-model="status" style="margin: 0; flex: 1;" @update:modelValue="reload">
+				<MkSelect v-model="status" style="margin: 0; flex: 1;" :items="statusItems" @update:modelValue="reload">
 					<template #label>{{ i18n.ts.state }}</template>
-					<option value="all">{{ i18n.ts.all }}</option>
-					<option value="pending">{{ i18n.ts._contactForm._adminStatus.pending }}</option>
-					<option value="in_progress">{{ i18n.ts._contactForm._adminStatus.inProgress }}</option>
-					<option value="resolved">{{ i18n.ts._contactForm._adminStatus.resolved }}</option>
-					<option value="closed">{{ i18n.ts._contactForm._adminStatus.closed }}</option>
 				</MkSelect>
-				<MkSelect v-model="category" style="margin: 0; flex: 1;" @update:modelValue="reload">
+				<MkSelect v-model="category" style="margin: 0; flex: 1;" :items="categoryItems" @update:modelValue="reload">
 					<template #label>{{ i18n.ts._contactForm._userForm.category }}</template>
-					<option value="all">{{ i18n.ts.all }}</option>
-					<option v-for="option in categoryOptions" :key="option.value" :value="option.value">
-						{{ option.label }}
-					</option>
 				</MkSelect>
 				<MkInput v-model="assignedUserId" style="margin: 0; flex: 1;" type="text" :spellcheck="false" :placeholder="i18n.ts._contactForm._adminDetail.placeholderAssignedUser" @update:modelValue="reload">
 					<template #label>{{ i18n.ts._contactForm._adminDetail.assignedUser }}</template>
@@ -72,6 +63,17 @@ const loading = ref(false);
 const status = ref('all');
 const category = ref('all');
 const assignedUserId = ref('');
+const statusItems = computed(() => [
+	{ value: 'all', label: i18n.ts.all },
+	{ value: 'pending', label: i18n.ts._contactForm._adminStatus.pending },
+	{ value: 'in_progress', label: i18n.ts._contactForm._adminStatus.inProgress },
+	{ value: 'resolved', label: i18n.ts._contactForm._adminStatus.resolved },
+	{ value: 'closed', label: i18n.ts._contactForm._adminStatus.closed },
+]);
+const categoryItems = computed(() => [
+	{ value: 'all', label: i18n.ts.all },
+	...categoryOptions.value,
+]);
 
 // Initialize categories
 onMounted(async () => {
