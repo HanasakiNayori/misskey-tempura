@@ -173,7 +173,7 @@ const fetching = ref(true);
 const weatherData = ref<WeatherApiResponse | null>(null);
 const updateTime = ref('');
 const intervalId = ref<number | null>(null);
-const attribution = ref({
+const attribution = Object.freeze({
 	title: 'Open-Meteo.com',
 	link: 'https://open-meteo.com/',
 });
@@ -223,8 +223,8 @@ const getWeatherCodeInfo = (code: number): WeatherCodeInfo => {
 const buildIconUrl = (icon: string) => `${WEATHER_ICON_BASE}/${icon}.svg`;
 
 const locationLabel = computed(() => {
-	const hasCustomName = widgetProps.locationName?.trim().length;
-	if (hasCustomName) return widgetProps.locationName;
+	const trimmedLocationName = widgetProps.locationName?.trim() ?? '';
+	if (trimmedLocationName.length > 0) return trimmedLocationName;
 	const lat = Number.isFinite(widgetProps.latitude) ? widgetProps.latitude.toFixed(2) : '';
 	const lon = Number.isFinite(widgetProps.longitude) ? widgetProps.longitude.toFixed(2) : '';
 	return lat && lon ? `${lat}, ${lon}` : '';
@@ -262,7 +262,7 @@ const formattedFooter = computed(() => {
 		'{timezone}': data.timezone,
 		'{timezoneAbbreviation}': data.timezone_abbreviation,
 		'{updateTime}': updateTime.value,
-		'{source}': attribution.value.title,
+		'{source}': attribution.title,
 	};
 
 	return widgetProps.footerFormat.replace(
@@ -272,8 +272,7 @@ const formattedFooter = computed(() => {
 });
 
 const fetchWeatherData = async () => {
-	const lat = Number(widgetProps.latitude);
-	const lon = Number(widgetProps.longitude);
+	const { latitude: lat, longitude: lon } = widgetProps;
 
 	if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
 		console.warn('緯度・経度が不正です');
@@ -302,10 +301,6 @@ const fetchWeatherData = async () => {
 		const data: WeatherApiResponse = await response.json();
 		weatherData.value = data;
 		updateTime.value = new Date().toLocaleString();
-		attribution.value = {
-			title: 'Open-Meteo.com',
-			link: 'https://open-meteo.com/',
-		};
 	} catch (error) {
 		console.error('Failed to fetch weather data:', error);
 		await os.alert({
