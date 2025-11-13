@@ -222,6 +222,25 @@ const getWeatherCodeInfo = (code: number): WeatherCodeInfo => {
 
 const buildIconUrl = (icon: string) => `${WEATHER_ICON_BASE}/${icon}.svg`;
 
+const toUtcDate = (dateString: string) => {
+	const parts = dateString.split('-');
+	if (parts.length !== 3) return null;
+	const [yearStr, monthStr, dayStr] = parts;
+	const year = Number.parseInt(yearStr, 10);
+	const month = Number.parseInt(monthStr, 10);
+	const day = Number.parseInt(dayStr, 10);
+	if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return null;
+	return new Date(Date.UTC(year, month - 1, day));
+};
+
+const formatWeekdayLabel = (dateString: string, timeZone?: string) => {
+	const date = toUtcDate(dateString);
+	if (!date) return '';
+	const options: Intl.DateTimeFormatOptions = { weekday: 'short' };
+	if (timeZone) options.timeZone = timeZone;
+	return new Intl.DateTimeFormat(undefined, options).format(date);
+};
+
 const locationLabel = computed(() => {
 	const trimmedLocationName = widgetProps.locationName?.trim() ?? '';
 	if (trimmedLocationName.length > 0) return trimmedLocationName;
@@ -235,12 +254,13 @@ const forecasts = computed<ProcessedForecast[]>(() => {
 	if (!data?.daily) return [];
 
 	const { time, weathercode, temperature_2m_max, temperature_2m_min } = data.daily;
+	const timeZone = data.timezone;
 
 	return time.map((date, index) => {
 		const info = getWeatherCodeInfo(weathercode[index]);
 		return {
 			date,
-			dateLabel: new Date(date).toLocaleDateString(undefined, { weekday: 'short' }),
+			dateLabel: formatWeekdayLabel(date, timeZone),
 			summary: info.summary,
 			iconUrl: buildIconUrl(info.icon),
 			temperatureMax: temperature_2m_max[index] ?? null,
@@ -276,6 +296,11 @@ const fetchWeatherData = async () => {
 
 	if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
 		console.warn('緯度・経度が不正です');
+		await os.alert({
+			type: 'error',
+			title: 'エラー',
+			text: '緯度・経度が不正です。設定を確認してください。',
+		});
 		fetching.value = false;
 		return;
 	}
@@ -318,8 +343,9 @@ const refreshWeatherData = () => {
 };
 
 const formatDate = (dateString: string) => {
-	const date = new Date(dateString);
-	return `${date.getMonth() + 1}/${date.getDate()}`;
+	const date = toUtcDate(dateString);
+	if (!date) return dateString;
+	return `${date.getUTCMonth() + 1}/${date.getUTCDate()}`;
 };
 
 const formatTemperature = (value: number | null) => {
