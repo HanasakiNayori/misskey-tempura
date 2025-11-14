@@ -183,41 +183,41 @@ const clampForecastDays = (value: number) => {
 	return Math.min(Math.max(safeValue, 1), MAX_FORECAST_DAYS);
 };
 
-const weatherCodeMapping: Record<number, WeatherCodeInfo> = {
-	0: { summary: 'Clear sky', icon: 'clear-day' },
-	1: { summary: 'Mainly clear', icon: 'partly-cloudy-day' },
-	2: { summary: 'Partly cloudy', icon: 'partly-cloudy-day' },
-	3: { summary: 'Overcast', icon: 'overcast' },
-	45: { summary: 'Fog', icon: 'fog' },
-	48: { summary: 'Depositing rime fog', icon: 'fog' },
-	51: { summary: 'Light drizzle', icon: 'drizzle' },
-	53: { summary: 'Moderate drizzle', icon: 'drizzle' },
-	55: { summary: 'Dense drizzle', icon: 'drizzle' },
-	56: { summary: 'Freezing drizzle', icon: 'sleet' },
-	57: { summary: 'Freezing drizzle', icon: 'sleet' },
-	61: { summary: 'Slight rain', icon: 'rain' },
-	63: { summary: 'Moderate rain', icon: 'rain' },
-	65: { summary: 'Heavy rain', icon: 'rain' },
-	66: { summary: 'Light freezing rain', icon: 'sleet' },
-	67: { summary: 'Heavy freezing rain', icon: 'sleet' },
-	71: { summary: 'Slight snow fall', icon: 'snow' },
-	73: { summary: 'Moderate snow fall', icon: 'snow' },
-	75: { summary: 'Heavy snow fall', icon: 'snow' },
-	77: { summary: 'Snow grains', icon: 'snow' },
-	80: { summary: 'Slight rain showers', icon: 'rain' },
-	81: { summary: 'Moderate rain showers', icon: 'rain' },
-	82: { summary: 'Violent rain showers', icon: 'rain' },
-	85: { summary: 'Snow showers', icon: 'snow' },
-	86: { summary: 'Heavy snow showers', icon: 'snow' },
-	95: { summary: 'Thunderstorm', icon: 'thunderstorms' },
-	96: { summary: 'Thunderstorm with hail', icon: 'thunderstorms' },
-	99: { summary: 'Severe thunderstorm with hail', icon: 'thunderstorms' },
-};
+const weatherCodeMapping = computed<Record<number, WeatherCodeInfo>>(() => ({
+	0: { summary: i18n.ts._weatherWidgets.summaries.clearSky, icon: 'clear-day' },
+	1: { summary: i18n.ts._weatherWidgets.summaries.mainlyClear, icon: 'partly-cloudy-day' },
+	2: { summary: i18n.ts._weatherWidgets.summaries.partlyCloudy, icon: 'partly-cloudy-day' },
+	3: { summary: i18n.ts._weatherWidgets.summaries.overcast, icon: 'overcast' },
+	45: { summary: i18n.ts._weatherWidgets.summaries.fog, icon: 'fog' },
+	48: { summary: i18n.ts._weatherWidgets.summaries.depositingRimeFog, icon: 'fog' },
+	51: { summary: i18n.ts._weatherWidgets.summaries.lightDrizzle, icon: 'drizzle' },
+	53: { summary: i18n.ts._weatherWidgets.summaries.moderateDrizzle, icon: 'drizzle' },
+	55: { summary: i18n.ts._weatherWidgets.summaries.denseDrizzle, icon: 'drizzle' },
+	56: { summary: i18n.ts._weatherWidgets.summaries.freezingDrizzle, icon: 'sleet' },
+	57: { summary: i18n.ts._weatherWidgets.summaries.freezingDrizzle, icon: 'sleet' },
+	61: { summary: i18n.ts._weatherWidgets.summaries.slightRain, icon: 'rain' },
+	63: { summary: i18n.ts._weatherWidgets.summaries.moderateRain, icon: 'rain' },
+	65: { summary: i18n.ts._weatherWidgets.summaries.heavyRain, icon: 'rain' },
+	66: { summary: i18n.ts._weatherWidgets.summaries.lightFreezingRain, icon: 'sleet' },
+	67: { summary: i18n.ts._weatherWidgets.summaries.heavyFreezingRain, icon: 'sleet' },
+	71: { summary: i18n.ts._weatherWidgets.summaries.slightSnowFall, icon: 'snow' },
+	73: { summary: i18n.ts._weatherWidgets.summaries.moderateSnowFall, icon: 'snow' },
+	75: { summary: i18n.ts._weatherWidgets.summaries.heavySnowFall, icon: 'snow' },
+	77: { summary: i18n.ts._weatherWidgets.summaries.snowGrains, icon: 'snow' },
+	80: { summary: i18n.ts._weatherWidgets.summaries.slightRainShowers, icon: 'rain' },
+	81: { summary: i18n.ts._weatherWidgets.summaries.moderateRainShowers, icon: 'rain' },
+	82: { summary: i18n.ts._weatherWidgets.summaries.violentRainShowers, icon: 'rain' },
+	85: { summary: i18n.ts._weatherWidgets.summaries.snowShowers, icon: 'snow' },
+	86: { summary: i18n.ts._weatherWidgets.summaries.heavySnowShowers, icon: 'snow' },
+	95: { summary: i18n.ts._weatherWidgets.summaries.thunderstorm, icon: 'thunderstorms' },
+	96: { summary: i18n.ts._weatherWidgets.summaries.thunderstormWithHail, icon: 'thunderstorms' },
+	99: { summary: i18n.ts._weatherWidgets.summaries.severeThunderstormWithHail, icon: 'thunderstorms' },
+}));
 
 const defaultWeatherInfo: WeatherCodeInfo = { summary: 'Unknown', icon: 'overcast' };
 
 const getWeatherCodeInfo = (code: number): WeatherCodeInfo => {
-	return weatherCodeMapping[code] ?? defaultWeatherInfo;
+	return weatherCodeMapping.value[code] ?? defaultWeatherInfo;
 };
 
 const buildIconUrl = (icon: string) => `${WEATHER_ICON_BASE}/${icon}.svg`;
@@ -365,7 +365,7 @@ const searchLocations = async (query: string): Promise<GeocodingResult[]> => {
 	const limit = Math.max(1, Math.min(50, Math.round(widgetProps.searchResultLimit)));
 	const params = new URLSearchParams({
 		name: query,
-		language: (widgetProps.geocodingLanguage || 'en').trim(),
+		language: (widgetProps.geocodingLanguage || widgetPropsDef.geocodingLanguage.default).trim(),
 		count: limit.toString(),
 	});
 	const response = await window.fetch(`${OPEN_METEO_GEOCODING_API}?${params.toString()}`);

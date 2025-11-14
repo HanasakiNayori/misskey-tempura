@@ -15756,6 +15756,122 @@ export interface Locale extends ILocale {
          */
         "disableJson": string;
     };
+    "_weatherWidgets": {
+        "summaries": {
+            /**
+             * 快晴
+             */
+            "clearSky": string;
+            /**
+             * おおむね晴れ
+             */
+            "mainlyClear": string;
+            /**
+             * 晴れ時々曇り
+             */
+            "partlyCloudy": string;
+            /**
+             * 曇り
+             */
+            "overcast": string;
+            /**
+             * 霧
+             */
+            "fog": string;
+            /**
+             * 霧氷
+             */
+            "depositingRimeFog": string;
+            /**
+             * 弱い霧雨
+             */
+            "lightDrizzle": string;
+            /**
+             * やや強い霧雨
+             */
+            "moderateDrizzle": string;
+            /**
+             * 強い霧雨
+             */
+            "denseDrizzle": string;
+            /**
+             * 着氷性の霧雨
+             */
+            "freezingDrizzle": string;
+            /**
+             * 弱い雨
+             */
+            "slightRain": string;
+            /**
+             * やや強い雨
+             */
+            "moderateRain": string;
+            /**
+             * 激しい雨
+             */
+            "heavyRain": string;
+            /**
+             * 弱い着氷性の雨
+             */
+            "lightFreezingRain": string;
+            /**
+             * 強い着氷性の雨
+             */
+            "heavyFreezingRain": string;
+            /**
+             * 弱い雪
+             */
+            "slightSnowFall": string;
+            /**
+             * やや強い雪
+             */
+            "moderateSnowFall": string;
+            /**
+             * 大雪
+             */
+            "heavySnowFall": string;
+            /**
+             * 霧雪
+             */
+            "snowGrains": string;
+            /**
+             * 弱いにわか雨
+             */
+            "slightRainShowers": string;
+            /**
+             * にわか雨
+             */
+            "moderateRainShowers": string;
+            /**
+             * 激しいにわか雨
+             */
+            "violentRainShowers": string;
+            /**
+             * にわか雪
+             */
+            "snowShowers": string;
+            /**
+             * 激しいにわか雪
+             */
+            "heavySnowShowers": string;
+            /**
+             * 雷雨
+             */
+            "thunderstorm": string;
+            /**
+             * 雹を伴う雷雨
+             */
+            "thunderstormWithHail": string;
+            /**
+             * 激しい雹を伴う雷雨
+             */
+            "severeThunderstormWithHail": string;
+            /**
+             * 不明
+             */
+            "unknown": string;
+        };
+    };
 }
 declare const locales: {
     [lang: string]: Locale;
