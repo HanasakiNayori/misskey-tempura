@@ -385,12 +385,17 @@ const {
 	],
 	initialValue: $i.chatScope,
 });
-const receiveSpecifiedNotesFrom = ref($i.receiveSpecifiedNotesFrom ?? 'all');
-const receiveSpecifiedNotesFromDef = computed(() => [
-	{ value: 'all', label: i18n.ts._receiveSpecifiedNotesFrom.all },
-	{ value: 'following', label: i18n.ts._receiveSpecifiedNotesFrom.following },
-	{ value: 'nobody', label: i18n.ts._receiveSpecifiedNotesFrom.nobody },
-]);
+const {
+	model: receiveSpecifiedNotesFrom,
+	def: receiveSpecifiedNotesFromDef,
+} = useMkSelect({
+	items: computed(() => [
+		{ value: 'all', label: i18n.ts._receiveSpecifiedNotesFrom.all },
+		{ value: 'following', label: i18n.ts._receiveSpecifiedNotesFrom.following },
+		{ value: 'nobody', label: i18n.ts._receiveSpecifiedNotesFrom.nobody },
+	]),
+	initialValue: $i.receiveSpecifiedNotesFrom ?? 'all',
+});
 
 const makeNotesFollowersOnlyBefore_type = computed({
 	get: () => {
