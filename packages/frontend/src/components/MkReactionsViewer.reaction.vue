@@ -43,6 +43,7 @@ import { haptic } from '@/utility/haptic.js';
 const reactionChecksMuting = prefer.s.reactionChecksMuting;
 
 const props = defineProps<{
+	note: Misskey.entities.Note;
 	noteId: Misskey.entities.Note['id'];
 	reaction: string;
 	reactionEmojis: Misskey.entities.Note['reactionEmojis'];
@@ -62,7 +63,7 @@ const buttonEl = useTemplateRef('buttonEl');
 const emojiName = computed(() => props.reaction.replace(/:/g, '').replace(/@\./, ''));
 
 function getReactionName(reaction: string, formated = false) {
-	const r = reaction.replaceAll(':', '').replace(/@.*/, '');
+	const r = reaction.replace(/:/g, '').replace(/@.*/, '');
 	return formated ? `:${r}:` : r;
 }
 
@@ -70,12 +71,12 @@ const isLocal = computed(() => !props.reaction.match(/@\w/));
 const isAvailable = computed(() => isLocal.value ? true : customEmojisMap.has(getReactionName(props.reaction)));
 
 const canToggle = computed(() => {
+	if ($i == null) return false;
 	const emoji = customEmojisMap.get(emojiName.value) ?? getUnicodeEmojiOrNull(props.reaction);
+	const permissionTarget = emoji ?? props.reaction;
+	if (!checkReactionPermissions($i, props.note, permissionTarget)) return false;
 
-	// TODO
-	// return props.reaction.match(/@\w/) == null && $i != null && emoji != null;
-	//return isAvailable.value && $i && emoji && checkReactionPermissions($i, props.note, emoji);
-	return $i && emoji;
+	return emoji != null || !isLocal.value;
 });
 const canGetInfo = computed(() => props.reaction.includes(':'));
 const isLocalCustomEmoji = props.reaction[0] === ':' && props.reaction.includes('@.');
@@ -94,7 +95,7 @@ const hideReactionCount = computed(() => {
 
 async function toggleReaction() {
 	if (!canToggle.value) return;
-		if ($i == null) return;
+	if ($i == null) return;
 
 	const me = $i;
 
