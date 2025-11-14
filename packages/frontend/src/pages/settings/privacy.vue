@@ -133,13 +133,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</SearchMarker>
 
 		<SearchMarker :keywords="['direct message', 'specified', 'note', 'receive']">
-			<MkSelect v-model="receiveSpecifiedNotesFrom" @update:modelValue="save()">
-				<template #label><SearchLabel>{{ i18n.ts.receiveSpecifiedNotesFrom }}</SearchLabel></template>
-				<template #caption><SearchKeyword>{{ i18n.ts.receiveSpecifiedNotesFromDescription }}</SearchKeyword></template>
-				<option value="all">{{ i18n.ts._receiveSpecifiedNotesFrom.all }}</option>
-				<option value="following">{{ i18n.ts._receiveSpecifiedNotesFrom.following }}</option>
-				<option value="nobody">{{ i18n.ts._receiveSpecifiedNotesFrom.nobody }}</option>
-			</MkSelect>
+				<MkSelect v-model="receiveSpecifiedNotesFrom" :items="receiveSpecifiedNotesFromDef" @update:modelValue="save()">
+					<template #label><SearchLabel>{{ i18n.ts.receiveSpecifiedNotesFrom }}</SearchLabel></template>
+					<template #caption><SearchKeyword>{{ i18n.ts.receiveSpecifiedNotesFromDescription }}</SearchKeyword></template>
+				</MkSelect>
 		</SearchMarker>
 
 		<SearchMarker :keywords="['online', 'status']">
@@ -388,7 +385,17 @@ const {
 	],
 	initialValue: $i.chatScope,
 });
-const receiveSpecifiedNotesFrom = ref($i.receiveSpecifiedNotesFrom ?? 'all');
+const {
+	model: receiveSpecifiedNotesFrom,
+	def: receiveSpecifiedNotesFromDef,
+} = useMkSelect({
+	items: computed(() => [
+		{ value: 'all', label: i18n.ts._receiveSpecifiedNotesFrom.all },
+		{ value: 'following', label: i18n.ts._receiveSpecifiedNotesFrom.following },
+		{ value: 'nobody', label: i18n.ts._receiveSpecifiedNotesFrom.nobody },
+	]),
+	initialValue: $i.receiveSpecifiedNotesFrom ?? 'all',
+});
 
 const makeNotesFollowersOnlyBefore_type = computed({
 	get: () => {

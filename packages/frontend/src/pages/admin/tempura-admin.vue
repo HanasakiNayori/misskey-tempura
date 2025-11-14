@@ -376,12 +376,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<template #caption>{{ i18n.ts._llm._server.serverGeminiApiKeyDescription }}</template>
 						</MkInput>
 
-						<MkSelect v-model="geminiSettingsForm.state.serverGeminiModels">
+						<MkSelect v-model="geminiSettingsForm.state.serverGeminiModels" :items="geminiModelItems">
 							<template #label>{{ i18n.ts._llm.geminiModelLabel }}</template>
 							<template #caption>{{ i18n.ts._llm._server.serverGeminiModelsDescription }}</template>
-							<option v-for="model in geminiModels" :key="model" :value="model">
-								{{ model }}
-							</option>
 						</MkSelect>
 					</div>
 				</MkFolder>
@@ -472,6 +469,10 @@ const entranceMarginBottom = ref<number>();
 const serverGeminiEnabled = ref<boolean>(false);
 const serverGeminiApiKey = ref<string>('');
 const serverGeminiModels = ref<string>('gemini-2.0-flash');
+const geminiModelItems = computed(() => geminiModels.map((model) => ({
+	value: model,
+	label: model,
+})));
 const customCursorUrl = ref<string | null>(null);
 const customCursorPointerUrl = ref<string | null>(null);
 const customCursorTextUrl = ref<string | null>(null);
