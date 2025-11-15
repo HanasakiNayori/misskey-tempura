@@ -16,7 +16,7 @@ import { clickAnimeDirective } from './click-anime.js';
 import { panelDirective } from './panel.js';
 import { adaptiveBorderDirective } from './adaptive-border.js';
 import { adaptiveBgDirective } from './adaptive-bg.js';
-import autosize from './autosize.js';
+import { autosizeDirective } from './autosize.js';
 
 export default function(app: App) {
 	for (const [key, value] of Object.entries(directives)) {
@@ -37,7 +37,7 @@ export const directives = {
 	'panel': panelDirective,
 	'adaptive-border': adaptiveBorderDirective,
 	'adaptive-bg': adaptiveBgDirective,
-	'autosize': autosize,
+	'autosize': autosizeDirective,
 } as Record<string, Directive>;
 
 declare module 'vue' {
@@ -53,5 +53,6 @@ declare module 'vue' {
 		vPanel: typeof panelDirective;
 		vAdaptiveBorder: typeof adaptiveBorderDirective;
 		vAdaptiveBg: typeof adaptiveBgDirective;
+		vAutosize: typeof autosizeDirective;
 	}
 }

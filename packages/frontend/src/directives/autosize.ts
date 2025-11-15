@@ -22,7 +22,7 @@ const onInput = (arg: Event | HTMLTextAreaElement) => {
 	}
 };
 
-export default {
+export const autosizeDirective = {
 	mounted(el: HTMLTextAreaElement) {
 		if (!prefer.s.useTextAreaAutoSize) return;
 		onInput(el);

@@ -16,12 +16,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<template #suffix><MkTime :time="contactForm.createdAt"/></template>
 	<template #footer>
 		<div class="_buttons">
-			<MkSelect v-model="currentStatus" :class="$style.statusSelect">
+			<MkSelect v-model="currentStatus" :class="$style.statusSelect" :items="statusItems">
 				<template #label>{{ i18n.ts._contactForm._adminStatus.updateStatus }}</template>
-				<option value="pending">{{ i18n.ts._contactForm._adminStatus.pending }}</option>
-				<option value="in_progress">{{ i18n.ts._contactForm._adminStatus.inProgress }}</option>
-				<option value="resolved">{{ i18n.ts._contactForm._adminStatus.resolved }}</option>
-				<option value="closed">{{ i18n.ts._contactForm._adminStatus.closed }}</option>
 			</MkSelect>
 			<MkButton primary @click="updateStatus"><i class="ti ti-check"></i> {{ i18n.ts.update }}</MkButton>
 			<MkButton @click="deleteForm"><i class="ti ti-trash"></i> {{ i18n.ts.delete }}</MkButton>
@@ -133,6 +129,12 @@ const emit = defineEmits<{
 const { getCategoryLabel } = useContactFormCategories();
 
 const currentStatus = ref(props.contactForm.status);
+const statusItems = computed(() => [
+	{ value: 'pending', label: i18n.ts._contactForm._adminStatus.pending },
+	{ value: 'in_progress', label: i18n.ts._contactForm._adminStatus.inProgress },
+	{ value: 'resolved', label: i18n.ts._contactForm._adminStatus.resolved },
+	{ value: 'closed', label: i18n.ts._contactForm._adminStatus.closed },
+]);
 const adminNote = ref(props.contactForm.adminNote ?? '');
 const assignedUsername = ref('');
 
