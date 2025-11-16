@@ -11926,14 +11926,6 @@ export interface Locale extends ILocale {
          */
         "sendNotification": string;
         /**
-         * キューをクリア
-         */
-        "clearQueue": string;
-        /**
-         * キューをプロモート
-         */
-        "promoteQueue": string;
-        /**
          * ユーザートークンを再生成
          */
         "regenerateUserToken": string;

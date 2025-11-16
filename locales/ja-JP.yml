@@ -3152,8 +3152,6 @@ _moderationLogTypes:
   unquarantineRemoteInstance: "公開投稿のみ配送を解除"
   updateUserName: "ユーザー名を更新"
   sendNotification: "通知を送信"
-  clearQueue: "キューをクリア"
-  promoteQueue: "キューをプロモート"
   regenerateUserToken: "ユーザートークンを再生成"
   dropAllNotes: "全てのノートを削除"
 
