@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "misskey-js",
-  "version": "2025.11.0-tempura-1.9.7",
+  "version": "2025.11.0-tempura-1.9.8-dev",
   "description": "Misskey SDK for JavaScript",
   "license": "MIT",
   "main": "./built/index.js",
@@ -10,12 +10,12 @@
     ".": {
       "import": "./built/index.js",
       "types": "./built/index.d.ts",
-			"default": "./built/index.js"
+      "default": "./built/index.js"
     },
     "./*": {
       "import": "./built/*",
       "types": "./built/*",
-			"default": "./built/*"
+      "default": "./built/*"
     }
   },
   "scripts": {
