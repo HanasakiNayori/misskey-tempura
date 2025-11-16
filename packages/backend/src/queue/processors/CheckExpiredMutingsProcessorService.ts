@@ -4,17 +4,16 @@
  */
 
 import { Inject, Injectable } from '@nestjs/common';
-import { In } from 'typeorm';
 import { DI } from '@/di-symbols.js';
 import type { AvatarDecorationMutingsRepository, RenoteMutingsRepository, QuoteMutingsRepository, MutingsRepository } from '@/models/_.js';
 import type Logger from '@/logger.js';
 import { bindThis } from '@/decorators.js';
 import { UserMutingService } from '@/core/UserMutingService.js';
+import { ChannelMutingService } from '@/core/ChannelMutingService.js';
 import { UserAvatarDecorationMutingService } from '@/core/UserAvatarDecorationMutingService.js';
 import { UserRenoteMutingService } from '@/core/UserRenoteMutingService.js';
 import { UserQuoteMutingService } from '@/core/UserQuoteMutingService.js';
 import { QueueLoggerService } from '../QueueLoggerService.js';
-import type * as Bull from 'bullmq';
 
 @Injectable()
 export class CheckExpiredMutingsProcessorService {
@@ -35,6 +34,7 @@ export class CheckExpiredMutingsProcessorService {
 
 		private userAvatarDecorationMutingService: UserAvatarDecorationMutingService,
 		private userMutingService: UserMutingService,
+		private channelMutingService: ChannelMutingService,
 		private userRenoteMutingService: UserRenoteMutingService,
 		private userQuoteMutingService: UserQuoteMutingService,
 		private queueLoggerService: QueueLoggerService,
@@ -73,6 +73,8 @@ export class CheckExpiredMutingsProcessorService {
 		if (expired.length > 0) {
 			await this.userMutingService.unmute(expired);
 		}
+
+		await this.channelMutingService.eraseExpiredMutings();
 
 		if (expiredAvatarDecorationMutings.length > 0) {
 			await this.userAvatarDecorationMutingService.unmute(expiredAvatarDecorationMutings);

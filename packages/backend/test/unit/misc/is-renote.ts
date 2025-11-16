@@ -44,6 +44,7 @@ const base: MiNote = {
 	replyUserHost: null,
 	renoteUserId: null,
 	renoteUserHost: null,
+	renoteChannelId: null,
 	deleteAt: null,
 	isScheduledForPrivate: false,
 	deliveryTargets: null,

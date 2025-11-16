@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 	<div class="_spacer" style="--MI_SPACER-w: 700px;">
-		<div class="_spacer">
+		<div v-if="roles != null && roles.length > 0" class="_spacer">
 			<MkFoldableSection>
 				<template #header>{{ i18n.ts._role.manual + " " + i18n.ts.roles }}</template>
 		<div :class="$style.roleGrid">
@@ -25,6 +25,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 			</MkFoldableSection>
 		</div>
+	<MkLoading v-else-if="loading" />
+	<MkResult v-else type="empty" :text="i18n.ts.noRole"/>
 	</div>
 </template>
 
@@ -32,6 +34,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { ref } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkRolePreview from '@/components/MkRolePreview.vue';
+import { i18n } from '@/i18n.js';
 import MkFoldableSection from '@/components/MkFoldableSection.vue';
 import { i18n } from '@/i18n.js';
 import { misskeyApi } from '@/utility/misskey-api.js';
@@ -39,9 +42,12 @@ import { misskeyApi } from '@/utility/misskey-api.js';
 const rolesManual = ref<Misskey.entities.Role[] | null>(null);
 const rolesConditional = ref<Misskey.entities.Role[] | null>(null);
 const rolesCommunity = ref<Misskey.entities.Role[] | null>(null);
+const loading = ref(true);
 
 misskeyApi('roles/list').then(res => {
 	const roles = res.sort((a, b) => b.displayOrder - a.displayOrder);
+}).finally(() => {
+	loading.value = false;
 	rolesManual.value = roles.filter(x => x.target === 'manual' && x.permissionGroup !== 'Community');
 	rolesConditional.value = roles.filter(x => x.target === 'conditional' && x.permissionGroup !== 'Community');
 	rolesCommunity.value = roles.filter(x => x.permissionGroup === 'Community');
