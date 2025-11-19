@@ -6661,6 +6661,30 @@ export interface Locale extends ILocale {
      * nayizeを無効化する
      */
     "disableNoteNyaize": string;
+    /**
+     * お気に入りボタンを有効化する
+     */
+    "showFavoriteButton": string;
+    /**
+     * ノートのフッターメニューに「お気に入り」ボタンを追加します。ワンクリックでお気に入り登録・解除が可能になります。
+     */
+    "showFavoriteButtonDescription": string;
+    /**
+     * 引用ボタンを分離する
+     */
+    "separateQuoteButton": string;
+    /**
+     * ノートのフッターメニューに「引用」ボタンを追加します。
+     */
+    "separateQuoteButtonDescription": string;
+    /**
+     * リノートの公開範囲をリノートメニューに表示する
+     */
+    "selectRenoteVisibility": string;
+    /**
+     * リノートする際に、リノートの公開範囲を直接メニューから選択出来るようにします。
+     */
+    "selectRenoteVisibilityDescription": string;
     "_announcement": {
         /**
          * 既存ユーザーのみ

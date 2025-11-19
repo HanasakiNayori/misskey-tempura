@@ -1684,6 +1684,12 @@ _bubbleGame:
 autoRejectFollowRequest: "フォローリクエストを自動で拒否する"
 autoRejectFollowRequestDescription: "フォローリクエストを自動で拒否するようにします。「フォロー中ユーザーからのフォロリクを自動承認」がONになっている場合は、フォロー中ユーザーからのフォローリクエストは自動的に承認され、それ以外のユーザーからのフォローリクエストは自動的に拒否されるようになります。"
 disableNoteNyaize: "nayizeを無効化する"
+showFavoriteButton: "お気に入りボタンを有効化する"
+showFavoriteButtonDescription: "ノートのフッターメニューに「お気に入り」ボタンを追加します。ワンクリックでお気に入り登録・解除が可能になります。"
+separateQuoteButton: "引用ボタンを分離する"
+separateQuoteButtonDescription: "ノートのフッターメニューに「引用」ボタンを追加します。"
+selectRenoteVisibility: "リノートの公開範囲をリノートメニューに表示する"
+selectRenoteVisibilityDescription: "リノートする際に、リノートの公開範囲を直接メニューから選択出来るようにします。"
 
 _announcement:
   forExistingUsers: "既存ユーザーのみ"

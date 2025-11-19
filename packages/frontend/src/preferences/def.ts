@@ -17,6 +17,7 @@ import type { ImageFramePreset } from '@/utility/image-frame-renderer/ImageFrame
 import { genId } from '@/utility/id.js';
 import { DEFAULT_DEVICE_KIND } from '@/utility/device-kind.js';
 import { deepEqual } from '@/utility/deep-equal.js';
+import { select } from '@/os.js';
 
 /** サウンド設定 */
 export type SoundStore = {
@@ -565,6 +566,15 @@ export const PREF_DEF = definePreferences({
 	},
 	showLikeButton: {
 		default: true,
+	},
+	showFavoriteButton: {
+		default: false,
+	},
+	separateQuoteButton: {
+		default: false,
+	},
+	selectRenoteVisibility: {
+		default: false,
 	},
 	hideReactionUsers: {
 		default: false,

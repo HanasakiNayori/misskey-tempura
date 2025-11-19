@@ -22,6 +22,28 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</MkPreferenceContainer>
 				</SearchMarker>
 
+				<SearchMarker :keywords="['separate', 'quote']">
+					<MkPreferenceContainer k="separateQuoteButton">
+						<MkSwitch v-model="separateQuoteButton">
+							<template #label>
+								<SearchLabel>{{ i18n.ts.separateQuoteButton }}</SearchLabel>
+							</template>
+							<template #caption>{{ i18n.ts.separateQuoteButtonDescription }}</template>
+						</MkSwitch>
+					</MkPreferenceContainer>
+				</SearchMarker>
+
+				<SearchMarker :keywords="['renote', 'visibility', 'select']">
+					<MkPreferenceContainer k="selectRenoteVisibility">
+						<MkSwitch v-model="selectRenoteVisibility">
+							<template #label>
+								<SearchLabel>{{ i18n.ts.selectRenoteVisibility }}</SearchLabel>
+							</template>
+							<template #caption>{{ i18n.ts.selectRenoteVisibilityDescription }}</template>
+						</MkSwitch>
+					</MkPreferenceContainer>
+				</SearchMarker>
+
 				<SearchMarker :keywords="['reaction', 'users', 'hide']">
 					<MkPreferenceContainer k="hideReactionUsers">
 						<MkSwitch v-model="hideReactionUsers">
@@ -87,13 +109,24 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</MkPreferenceContainer>
 				</SearchMarker>
 
+				<SearchMarker :keywords="['favorite', 'button', 'enable']">
+					<MkPreferenceContainer k="showFavoriteButton">
+						<MkSwitch v-model="showFavoriteButton">
+							<template #label>
+							<SearchLabel>{{ i18n.ts.showFavoriteButton }}</SearchLabel>
+							</template>
+							<template #caption>{{ i18n.ts.showFavoriteButtonDescription }}</template>
+						</MkSwitch>
+					</MkPreferenceContainer>
+				</SearchMarker>		
+
 				<SearchMarker :keywords="['reaction', 'count', 'hide']">
 					<MkPreferenceContainer k="hideReactionCount">
 						<MkSelect v-model="hideReactionCount" :items="hideReactionCountItems">
 							<template #label><SearchLabel>{{ i18n.ts.hideReactionCount }}</SearchLabel></template>
 						</MkSelect>
 					</MkPreferenceContainer>
-				</SearchMarker>
+				</SearchMarker>		
 
 				<MkFolder>
 					<template #label><SearchLabel>{{ i18n.ts.like }}</SearchLabel></template>
@@ -153,6 +186,9 @@ const enableReactionConfirm = prefer.model('enableReactionConfirm');
 const enableLikeConfirm = prefer.model('enableLikeConfirm');
 const showInstanceTickerSoftwareName = prefer.model('showInstanceTickerSoftwareName');
 const showInstanceTickerVersion = prefer.model('showInstanceTickerVersion');
+const showFavoriteButton = prefer.model('showFavoriteButton');
+const separateQuoteButton = prefer.model('separateQuoteButton');
+const selectRenoteVisibility = prefer.model('selectRenoteVisibility');
 
 const hideReactionCountItems = computed(() => [
 	{ value: 'none', label: i18n.ts._hideReactionCount.none },

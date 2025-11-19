@@ -173,12 +173,22 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<button v-else class="_button" :class="$style.noteFooterButton" disabled>
 				<i class="ti ti-ban"></i>
 			</button>
+			<button v-if="!prefer.s.directRenote && prefer.s.separateQuoteButton && canRenote" ref="quoteButton" v-tooltiop="i18n.ts.quote" :class="$style.noteFooterButton" class="_button" @click="quote()">
+				<i class="ti ti-quote"></i>
+			</button>
+			<button v-else-if="!prefer.s.directRenote && prefer.s.separateQuoteButton && !canRenote" :class="$style.noteFooterButton" class="_button" disabled>
+				<i class="ti ti-ban"></i>
+			</button>
 			<button v-if="appearNote.reactionAcceptance !== 'likeOnly' && $appearNote.myReaction == null && prefer.s.showLikeButton" ref="heartReactButton" v-tooltip="i18n.ts.like" :class="$style.noteFooterButton" class="_button" @click="toggleHeartReact()">
 				<i class="ti ti-heart"></i>
 			</button>
+			<button v-if="prefer.s.showFavoriteButton" ref="favoriteButton" v-tooltip="i18n.ts.favorite" :class="$style.noteFooterButton" class="_button" @click="toggleFavorite()">
+				<i v-if="isFavorited" class="ti ti-star-filled" style="color: var(--MI_THEME-accent);"></i>
+				<i v-else class="ti ti-star"></i>
+			</button>
 			<button ref="reactButton" :class="$style.noteFooterButton" class="_button" @click="toggleReact()">
 				<i v-if="appearNote.reactionAcceptance === 'likeOnly' && $appearNote.myReaction != null" class="ti ti-heart-filled" style="color: var(--MI_THEME-love);"></i>
-				<i v-else-if="$appearNote.myReaction != null" class="ti ti-minus" style="color: var(--MI_THEME-accent);"></i>
+				<i v-else-if="$appearNote.myReaction != null" class="ti ti-mood-minus" style="color: var(--MI_THEME-accent);"></i>
 				<i v-else-if="appearNote.reactionAcceptance === 'likeOnly'" class="ti ti-heart"></i>
 				<i v-else class="ti ti-mood-plus"></i>
 				<p v-if="(appearNote.reactionAcceptance === 'likeOnly' || prefer.s.showReactionsCount) && $appearNote.reactionCount > 0" :class="$style.noteFooterButtonCount">{{ number($appearNote.reactionCount) }}</p>
@@ -346,6 +356,8 @@ const renoteTime = useTemplateRef('renoteTime');
 const reactButton = useTemplateRef('reactButton');
 const heartReactButton = useTemplateRef('heartReactButton');
 const clipButton = useTemplateRef('clipButton');
+const favButton = useTemplateRef('favButton');
+const quoteButton = useTemplateRef('quoteButton');
 const galleryEl = useTemplateRef('galleryEl');
 const isMyRenote = $i && ($i.id === note.userId);
 const showContent = ref(false);
@@ -394,6 +406,16 @@ if (appearNote.deliveryTargets && (appearNote.deliveryTargets.mode === 'include'
 		});
 	});
 }
+
+
+const isFavorited = ref<boolean | null>(null);
+
+onMounted(async () => {
+	const state = await misskeyApi('notes/state', {
+		noteId: appearNote.id,
+	});
+	isFavorited.value = state.isFavorited;
+});
 
 const pleaseLoginContext = computed<OpenOnRemoteOptions>(() => ({
 	type: 'lookup',
@@ -504,6 +526,64 @@ if (appearNote.reactionAcceptance === 'likeOnly') {
 			closed: () => dispose(),
 		});
 	});
+}
+
+async function toggleFavorite():Promise<void> {
+	if (props.mock) {
+		return;
+	}
+	pleaseLogin({ openOnRemote: pleaseLoginContext.value });
+
+	claimAchievement('noteFavorited1');
+
+	const state = await misskeyApi('notes/state', {
+		noteId: appearNote.id,
+	});
+
+	const prev = state.isFavorited;
+
+	const confirm = await os.confirm({
+	type: 'warning',
+	text: state.isFavorited ? 'お気に入りを解除しますか？' : 'お気に入りに登録しますか？'
+	})
+
+	if (confirm.canceled) {
+		return;
+	}
+
+	await os.apiWithDialog(prev ? 'notes/favorites/delete' : 'notes/favorites/create', {
+		noteId: appearNote.id,
+	});
+	
+	isFavorited.value = !prev;
+}
+
+// from kokonect-link/cherrypick
+function quote(): void {
+	pleaseLogin({ openOnRemote: pleaseLoginContext.value });
+	if (!$i) return;
+	if (props.mock) {
+		return;
+	}
+	if (appearNote.channel) {
+		if (appearNote.channel.allowRenoteToExternal) {
+			const { menu } = getQuoteMenu({ note: note, mock: props.mock });
+			os.popupMenu(menu, quoteButton.value);
+		} else {
+			os.post({
+				renote: appearNote,
+				channel: appearNote.channel,
+			}).then(() => {
+				focus();
+			});
+		}
+	} else {
+		os.post({
+			renote: appearNote,
+		}).then(() => {
+			focus();
+		});
+	}
 }
 
 function renote() {
