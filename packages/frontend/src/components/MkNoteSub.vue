@@ -141,6 +141,7 @@ if (props.detail && props.note) {
 
 .text {
 	padding: 0;
+	margin-block-start: .5em;
 }
 
 .reply, .more {

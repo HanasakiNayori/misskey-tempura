@@ -101,6 +101,7 @@ const isDeleted = ref(false);
 
 .text {
 	cursor: default;
+	margin-block-start: .5em;
 	padding: 0;
 }
 
