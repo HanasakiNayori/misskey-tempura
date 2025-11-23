@@ -720,9 +720,19 @@ function save_validateMinimumUsernameLength() {
 }
 
 function save_defaultUsers() {
+	const defaultUsers = defaultFollowedUsers.value
+		.split('\n')
+		.map(x => x.trim())
+		.filter(x => x !== '');
+
+	const forciblyUsers = forciblyFollowedUsers.value
+		.split('\n')
+		.map(x => x.trim())
+		.filter(x => x !== '');
+
 	os.apiWithDialog('admin/update-meta', {
-		defaultFollowedUsers: defaultFollowedUsers.value.split('\n'),
-		forciblyFollowedUsers: forciblyFollowedUsers.value.split('\n'),
+		defaultFollowedUsers: defaultUsers.length > 0 ? defaultUsers : [],
+		forciblyFollowedUsers: forciblyUsers.length > 0 ? forciblyUsers : [],
 	}, undefined, {
 		'bcf088ec-fec5-42d0-8b9e-16d3b4797a4d': {
 			text: i18n.ts._extraSettings.defaultFollowedUsersDuplicated,
