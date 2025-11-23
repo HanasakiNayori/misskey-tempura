@@ -49,10 +49,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</div>
 	<article v-else :class="$style.article" @contextmenu.stop="onContextmenu">
 		<div v-if="appearNote.channel" :class="$style.colorBar" :style="{ background: appearNote.channel.color }"></div>
-		<MkAvatar :class="[$style.avatar, prefer.s.useStickyIcons ? $style.useSticky : null]" :user="appearNote.user" :link="!mock" :preview="!mock"/>
+		<MkAvatar v-if="!prefer.s.enableFirefishLikeNoteUI" :class="[$style.avatar, prefer.s.useStickyIcons ? $style.useSticky : null]" :user="appearNote.user" :link="!mock" :preview="!mock"/>
 		<div :class="$style.main">
-			<MkNoteHeader :note="appearNote" :mini="true"/>
-			<MkInstanceTicker v-if="showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
+			<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.headerContainer : null">
+				<MkAvatar v-if="prefer.s.enableFirefishLikeNoteUI" :class="[$style.avatar, prefer.s.useStickyIcons ? $style.useSticky : null]" :user="appearNote.user" :link="!mock" :preview="!mock"/>
+				<MkNoteHeader :note="appearNote" :mini="true"/>
+				<MkInstanceTicker v-if="!prefer.s.enableFirefishLikeNoteUI && showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
+			</div>
 			<div style="container-type: inline-size;">
 				<p v-if="appearNote.cw != null" :class="$style.cw">
 					<Mfm
@@ -66,7 +69,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<MkCwButton v-model="showContent" :text="appearNote.text" :renote="appearNote.renote" :files="appearNote.files" :poll="appearNote.poll" style="margin: 4px 0;"/>
 				</p>
 				<div v-show="appearNote.cw == null || showContent" :class="[{ [$style.contentCollapsed]: collapsed }]">
-					<div :class="$style.text">
+					<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeText : $style.text">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ i18n.ts.private }})</span>
 						<MkA v-if="appearNote.replyId" :class="$style.replyIcon" :to="`/notes/${appearNote.replyId}`"><i class="ti ti-arrow-back-up"></i></MkA>
 						<Mfm
@@ -147,7 +150,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<button v-else :class="$style.footerButton" class="_button" disabled>
 					<i class="ti ti-ban"></i>
 				</button>
-				<button v-if="!prefer.s.directRenote && prefer.s.separateQuoteButton && canRenote" ref="quoteButton" v-tooltiop="i18n.ts.quote" :class="$style.footerButton" class="_button" @click="quote()">
+				<button v-if="!prefer.s.directRenote && prefer.s.separateQuoteButton && canRenote" ref="quoteButton" v-tooltip="i18n.ts.quote" :class="$style.footerButton" class="_button" @click="quote()">
 					<i class="ti ti-quote"></i>
 				</button>
 				<button v-else-if="!prefer.s.directRenote && prefer.s.separateQuoteButton && !canRenote" :class="$style.footerButton" class="_button" disabled>
@@ -332,7 +335,8 @@ const hardMuted = ref(props.withHardMute && checkMute(appearNote, $i?.hardMutedW
 const showSoftWordMutedWord = computed(() => prefer.s.showSoftWordMutedWord);
 const translation = ref<Misskey.entities.NotesTranslateResponse | null>(null);
 const translating = ref(false);
-const showTicker = (prefer.s.instanceTicker === 'always') || (prefer.s.instanceTicker === 'remote' && appearNote.user.instance);
+const showTicker = (prefer.s.instanceTicker === 'always') || (prefer.s.instanceTicker === 'remote' && props.note.user.instance);
+
 const canRenote = computed(() => ['public', 'home'].includes(appearNote.visibility) || (appearNote.visibility === 'followers' && appearNote.userId === $i?.id));
 const renoteCollapsed = ref(
 	prefer.s.collapseRenotes && isRenote && (
@@ -1033,6 +1037,12 @@ function emitUpdReaction(emoji: string, delta: number) {
 	padding: 28px 32px;
 }
 
+.headerContainer {
+	display: flex;
+	align-items: center;
+	margin-bottom: 4px; // ヘッダーと本文の間の余白
+}
+
 .colorBar {
 	position: absolute;
 	top: 8px;
@@ -1114,6 +1124,11 @@ function emitUpdReaction(emoji: string, delta: number) {
 	font-size: 0.8em;
 	border-radius: 999px;
 	box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
+}
+
+.firefishLikeText {
+	overflow-wrap: break-word;
+	margin-block-start: .5em;
 }
 
 .text {

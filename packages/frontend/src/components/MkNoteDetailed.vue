@@ -80,7 +80,15 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<img v-for="(role, i) in appearNote.user.badgeRoles" :key="i" v-tooltip="role.name" :class="$style.noteHeaderBadgeRole" :src="role.iconUrl!"/>
 					</div>
 				</div>
-				<MkInstanceTicker v-if="showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
+				<MkInstanceTicker v-if="!prefer.s.enableFirefishLikeNoteUI && showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
+			</div>
+			<div :class="$style.firefishLikeInfo">
+				<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeCreatedAt : null">
+					<MkA :to="notePage(note)">
+						<MkTime :time="note.createdAt" colored/>
+					</MkA>
+				</div>
+				<MkInstanceTicker v-if="prefer.s.enableFirefishLikeNoteUI && showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
 			</div>
 		</header>
 		<div :class="$style.noteContent">
@@ -140,7 +148,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<footer>
 			<div :class="$style.noteFooterInfo">
 				<MkA :to="notePage(appearNote)">
-					<MkTime :time="appearNote.createdAt" mode="detail" colored/>
+					<MkTime :time="appearNote.createdAt" :mode="prefer.s.enableFirefishLikeNoteUI ? 'absolute' : 'detail'" colored/>
 				</MkA>
 				<br>
 				<span v-if="appearNote.deleteAt"><i class="ti ti-bomb"></i>{{ i18n.ts.scheduledNoteDelete }}: <MkTime :time="appearNote.deleteAt" mode="detail" colored/></span>
@@ -900,6 +908,7 @@ function loadConversation() {
 	position: relative;
 	margin-bottom: 16px;
 	align-items: center;
+	line-height: 1.5em;
 }
 
 .noteHeaderAvatar {
@@ -959,6 +968,23 @@ function loadConversation() {
 	& + .noteHeaderBadgeRole {
 		margin-left: 0.2em;
 	}
+}
+
+.firefishLikeInfo {
+	display: flex;              // inline-flex → flex
+	flex-direction: column;     // 中身を縦並び
+	align-items: flex-end;      // 右寄せ（右端でそろえる）
+
+	flex-shrink: 0;
+	margin-inline-start: auto;  // 0.5em → auto にして右側に押しやる
+	font-size: 0.9em;
+}
+
+.firefishLikeCreatedAt {
+	display: block;             // 念のためブロックにしておくと縦に並びやすい
+	max-inline-size: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .noteContent {

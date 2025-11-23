@@ -4,9 +4,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div :class="$style.root" :style="themeColorStyle">
+<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeRoot : $style.root" :style="themeColorStyle">
 	<img v-if="faviconUrl" :class="$style.icon" :src="faviconUrl"/>
-	<div :class="$style.name">
+	<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeName : $style.name">
 		{{ instanceName }}
 		<template v-if="showInstanceTickerSoftwareName">
 			| {{ instance.softwareName }}
@@ -66,6 +66,32 @@ const themeColorStyle = computed<CSSProperties>(() => {
 
 <style lang="scss" module>
 $height: 2ex;
+
+.firefishLikeRoot {
+	display: flex;
+	align-items: center;
+	block-size: 1.1em;
+	justify-self: flex-end;
+	padding-block: 0.2em;
+	padding-inline: 0.4em;
+	border-radius: 100px;
+	font-size: 0.8em;
+	overflow: hidden;
+}
+
+.firefishLikeName {
+	margin-left: 4px;
+	line-height: 1;
+	font-size: 0.9em;
+	font-weight: bold;
+	white-space: nowrap;
+	overflow: visible;
+
+	// text-shadowは重いから使うな
+	color: var(--MI_THEME-fg);
+	-webkit-text-stroke: var(--MI_THEME-panel) .225em;
+	paint-order: stroke fill;
+}
 
 .root {
 	display: flex;

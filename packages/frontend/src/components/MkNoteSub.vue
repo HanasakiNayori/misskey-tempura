@@ -10,17 +10,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div v-else-if="!muted" :class="[$style.root, { [$style.children]: depth > 1 }]">
 	<div :class="$style.main">
 		<div v-if="note.channel" :class="$style.colorBar" :style="{ background: note.channel.color }"></div>
-		<MkAvatar :class="$style.avatar" :user="note.user" link preview/>
+		<MkAvatar v-if="!prefer.s.enableFirefishLikeNoteUI"  :class="$style.avatar" :user="note.user" link preview/>
 		<div :class="$style.body">
-			<MkNoteHeader :class="$style.header" :note="note" :mini="true"/>
-			<div>
-				<p v-if="note.cw != null" :class="$style.cw">
-					<Mfm v-if="note.cw != ''" style="margin-right: 8px;" :text="note.cw" :author="note.user" :nyaize="'respect'"/>
-					<MkCwButton v-model="showContent" :text="note.text" :files="note.files" :poll="note.poll"/>
-				</p>
-				<div v-show="note.cw == null || showContent">
-					<MkSubNoteContent :class="$style.text" :note="note"/>
-				</div>
+			<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.headerContainer : null">
+				<MkAvatar v-if="prefer.s.enableFirefishLikeNoteUI" :class="$style.avatar" :user="note.user" link preview/>
+				<MkNoteHeader :class="$style.header" :note="note" :mini="true"/>
+			</div>
+			<p v-if="note.cw != null" :class="$style.cw">
+				<Mfm v-if="note.cw != ''" style="margin-right: 8px;" :text="note.cw" :author="note.user" :nyaize="'respect'"/>
+				<MkCwButton v-model="showContent" :text="note.text" :files="note.files" :poll="note.poll"/>
+			</p>
+			<div v-show="note.cw == null || showContent">
+				<MkSubNoteContent :class="$style.text" :note="note"/>
 			</div>
 		</div>
 	</div>
@@ -54,7 +55,7 @@ import { i18n } from '@/i18n.js';
 import { $i } from '@/i.js';
 import { userPage } from '@/filters/user.js';
 import { checkWordMute } from '@/utility/check-word-mute.js';
-
+import { prefer } from '@/preferences.js';
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note | null;
 	detail?: boolean;
@@ -120,20 +121,25 @@ if (props.detail && props.note) {
 	min-width: 0;
 }
 
+.headerContainer {
+	display: flex;
+	align-items: center;
+	margin-bottom: 4px; // ヘッダーと本文の間の余白
+}
+
 .header {
-	margin-bottom: 2px;
+	margin-bottom: 4px;
 }
 
 .cw {
 	cursor: default;
 	display: block;
-	margin: 0;
+	margin: 4px 0 4px 0;
 	padding: 0;
 	overflow-wrap: break-word;
 }
 
 .text {
-	margin: 0;
 	padding: 0;
 }
 

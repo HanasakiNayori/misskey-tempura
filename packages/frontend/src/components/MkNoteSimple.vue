@@ -5,9 +5,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 <div v-show="!isDeleted" v-if="note" :class="$style.root" :tabindex="!isDeleted ? '-1' : undefined">
-	<MkAvatar :class="[$style.avatar, prefer.s.useStickyIcons ? $style.useSticky : null]" :user="note.user" link preview/>
+	<MkAvatar v-if="!prefer.s.enableFirefishLikeNoteUI" :class="[$style.avatar, prefer.s.useStickyIcons ? $style.useSticky : null]" :user="note.user" link preview/>
 	<div :class="$style.main">
-		<MkNoteHeader :class="$style.header" :note="note" :mini="true"/>
+		<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.headerContainer : null">
+			<MkAvatar v-if="prefer.s.enableFirefishLikeNoteUI" :class="[$style.avatar, prefer.s.useStickyIcons ? $style.useSticky : null]" :user="note.user" link preview/>
+			<MkNoteHeader :class="$style.header" :note="note" :mini="true"/>
+		</div>
 		<div>
 			<p v-if="note.cw != null" :class="$style.cw">
 				<Mfm v-if="note.cw != ''" style="margin-right: 8px;" :text="note.cw" :author="note.user" :nyaize="'respect'" :emojiUrls="note.emojis"/>
@@ -78,6 +81,12 @@ const isDeleted = ref(false);
 	min-width: 0;
 }
 
+.headerContainer {
+	display: flex;
+	align-items: center;
+	margin-bottom: 4px; // ヘッダーと本文の間の余白
+}
+
 .header {
 	margin-bottom: 2px;
 }
@@ -92,7 +101,6 @@ const isDeleted = ref(false);
 
 .text {
 	cursor: default;
-	margin: 0;
 	padding: 0;
 }
 

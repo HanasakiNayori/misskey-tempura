@@ -93,6 +93,23 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</template>
 				</MkFolder>
 			</SearchMarker>
+
+			<SearchMarker :keywords="['firefish', 'UI', 'enable']">
+				<MkPreferenceContainer k="enableFirefishLikeNoteUI">
+					<MkSwitch v-model="enableFirefishLikeNoteUI">
+						<template #caption>{{ i18n.ts._enableFirefishLikeNoteUI.caption }}</template>
+						<SearchLabel>{{ i18n.ts._enableFirefishLikeNoteUI.title }}</SearchLabel>
+					</MkSwitch>
+				</MkPreferenceContainer>
+			</SearchMarker>
+			<SearchMarker :keywords="['firefish', 'UI', 'show', 'timeline', 'gap']">
+				<MkPreferenceContainer k="showGapBetweenNotesInTimeline">
+					<MkSwitch v-model="showGapBetweenNotesInTimeline">
+						<template #caption>{{ i18n.ts._showGapBetweenNotesInTimeline.caption }}</template>
+						<SearchLabel>{{ i18n.ts._showGapBetweenNotesInTimeline.title }}</SearchLabel>
+					</MkSwitch>
+				</MkPreferenceContainer>
+			</SearchMarker>
 		</div>
 	</MkFolder>
 </SearchMarker>
@@ -116,6 +133,8 @@ import MkRadios from '@/components/MkRadios.vue';
 
 const customFont = prefer.model('customFont');
 const defaultFxTwitterEmbedProvider = prefer.model('defaultFxTwitterEmbedProvider');
+const enableFirefishLikeNoteUI = prefer.model('enableFirefishLikeNoteUI')
+const showGapBetweenNotesInTimeline = prefer.model('showGapBetweenNotesInTimeline')
 
 // Twitter embed mode computed property
 const twitterEmbedMode = computed({

@@ -16012,6 +16012,26 @@ export interface Locale extends ILocale {
          */
         "caption": string;
     };
+    "_enableFirefishLikeNoteUI": {
+        /**
+         * firefish風のUIを有効化
+         */
+        "title": string;
+        /**
+         * 有効にすると、タイムラインの表示がfirefish風になります。
+         */
+        "caption": string;
+    };
+    "_showGapBetweenNotesInTimeline": {
+        /**
+         * タイムラインの投稿を離して表示する
+         */
+        "title": string;
+        /**
+         * 有効にすると、タイムラインの各投稿の間隔が離されて表示されます。
+         */
+        "caption": string;
+    };
     /**
      * {search}件
      */

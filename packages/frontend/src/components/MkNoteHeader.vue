@@ -4,47 +4,67 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<header :class="$style.root">
-	<div v-if="mock" :class="$style.name">
-		<MkUserName :user="note.user"/>
-	</div>
-	<MkA v-else v-user-preview="note.user.id" :class="$style.name" :to="userPage(note.user)">
-		<MkUserName :user="note.user"/>
-	</MkA>
-	<div v-if="note.user.isBot" :class="$style.isBot">bot</div>
-	<div :class="$style.username"><MkAcct :user="note.user"/></div>
-	<div v-if="note.user.badgeRoles" :class="$style.badgeRoles">
-		<img v-for="(role, i) in note.user.badgeRoles" :key="i" v-tooltip="role.name" :class="$style.badgeRole" :src="role.iconUrl!"/>
-	</div>
-	<div :class="$style.info">
-		<div v-if="mock">
-			<MkTime :time="note.createdAt" colored/>
+<header :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeRoot : $style.root">
+	<template v-if="prefer.s.enableFirefishLikeNoteUI">
+		<div :class="$style.firefishLikeUser">
+			<div v-if="mock" :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeName : $style.name">
+				<MkUserName :user="note.user"/>
+			</div>
+			<MkA v-else v-user-preview="note.user.id" :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeName : $style.name" :to="userPage(note.user)">
+				<MkUserName :user="note.user"/>
+			</MkA>
+			<div v-if="note.user.isBot" :class="$style.isBot">bot</div>
+			<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeUserName : $style.username"><MkAcct :user="note.user"/></div>
+			<div v-if="note.user.badgeRoles" :class="$style.badgeRoles">
+				<img v-for="(role, i) in note.user.badgeRoles" :key="i" v-tooltip="role.name" :class="$style.badgeRole" :src="role.iconUrl!"/>
+			</div>
 		</div>
-		<MkA v-else :to="notePage(note)">
-			<MkTime :time="note.createdAt" colored/>
+	</template>
+	<template v-else>
+		<div v-if="mock" :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeName : $style.name">
+			<MkUserName :user="note.user"/>
+		</div>
+		<MkA v-else v-user-preview="note.user.id" :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeName : $style.name" :to="userPage(note.user)">
+			<MkUserName :user="note.user"/>
 		</MkA>
-		<span v-if="note.visibility === 'public' && note.dontShowOnLtl === true" style="margin-left: 0.5em;" :title="i18n.ts._visibility['public_non_ltl']">
-			<i v-tooltip="i18n.ts._visibility['public_non_ltl']" class="ti ti-broadcast"></i>
-		</span>
-		<span v-else-if="note.visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[note.visibility]">
-			<i v-if="note.visibility === 'home'" v-tooltip="i18n.ts._visibility[note.visibility]" class="ti ti-home"></i>
-			<i v-else-if="note.visibility === 'followers'" v-tooltip="i18n.ts._visibility[note.visibility]" class="ti ti-lock"></i>
-			<i v-else-if="note.visibility === 'specified' && !note.visibleUserIds?.length" ref="specified" class="ti ti-eye-off"></i>
-			<i v-else-if="note.visibility === 'specified'" ref="specified" v-tooltip="i18n.ts._visibility[note.visibility]" class="ti ti-mail"></i>
-		</span>
-		<span v-if="note.reactionAcceptance != null" style="margin-left: 0.5em;" :class="{ [$style.danger]: ['nonSensitiveOnly', 'nonSensitiveOnlyForLocalLikeOnlyForRemote', 'likeOnly'].includes(<string>note.reactionAcceptance) }" :title="i18n.ts.reactionAcceptance">
-			<i v-if="note.reactionAcceptance === 'likeOnlyForRemote'" v-tooltip="i18n.ts.likeOnlyForRemote" class="ti ti-heart-plus"></i>
-			<i v-else-if="note.reactionAcceptance === 'nonSensitiveOnly'" v-tooltip="i18n.ts.nonSensitiveOnly" class="ti ti-icons"></i>
-			<i v-else-if="note.reactionAcceptance === 'nonSensitiveOnlyForLocalLikeOnlyForRemote'" v-tooltip="i18n.ts.nonSensitiveOnlyForLocalLikeOnlyForRemote" class="ti ti-heart-plus"></i>
-			<i v-else-if="note.reactionAcceptance === 'likeOnly'" v-tooltip="i18n.ts.likeOnly" class="ti ti-heart"></i>
-		</span>
-		<span v-if="note.localOnly" style="margin-left: 0.5em;"><i v-tooltip="i18n.ts._visibility['disableFederation']" class="ti ti-rocket-off"></i></span>
-		<span v-if="note.deliveryTargets && (note.deliveryTargets.mode === 'include' || note.deliveryTargets.hosts?.length)" style="margin-left: 0.5em;">
-			<i v-if="note.deliveryTargets.mode === 'include'" ref="deliveryTargetsIcon" class="ti ti-list-check"></i>
-			<i v-else ref="deliveryTargetsIcon" class="ti ti-list-details"></i>
-		</span>
-		<span v-if="note.channel" style="margin-left: 0.5em;"><i v-tooltip="note.channel.name" class="ti ti-device-tv"></i></span>
-		<span v-if="note.deleteAt" style="margin-left: 0.5em;" :title="i18n.tsx.noteDeletationAt({ time: dateTimeFormat.format(new Date(note.deleteAt)) })"><i class="ti ti-bomb"></i></span>
+		<div v-if="note.user.isBot" :class="$style.isBot">bot</div>
+		<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeUserName : $style.username"><MkAcct :user="note.user"/></div>
+		<div v-if="note.user.badgeRoles" :class="$style.badgeRoles">
+			<img v-for="(role, i) in note.user.badgeRoles" :key="i" v-tooltip="role.name" :class="$style.badgeRole" :src="role.iconUrl!"/>
+		</div>
+	</template>
+	<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeInfo : $style.info">
+		<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeCreatedAt : null">
+			<div v-if="mock">
+				<MkTime :time="note.createdAt" colored/>
+			</div>
+			<MkA v-else :to="notePage(note)">
+				<MkTime :time="note.createdAt" colored/>
+			</MkA>
+			<span v-if="note.visibility === 'public' && note.dontShowOnLtl === true" style="margin-left: 0.5em;" :title="i18n.ts._visibility['public_non_ltl']">
+				<i v-tooltip="i18n.ts._visibility['public_non_ltl']" class="ti ti-broadcast"></i>
+			</span>
+			<span v-else-if="note.visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[note.visibility]">
+				<i v-if="note.visibility === 'home'" v-tooltip="i18n.ts._visibility[note.visibility]" class="ti ti-home"></i>
+				<i v-else-if="note.visibility === 'followers'" v-tooltip="i18n.ts._visibility[note.visibility]" class="ti ti-lock"></i>
+				<i v-else-if="note.visibility === 'specified' && !note.visibleUserIds?.length" ref="specified" class="ti ti-eye-off"></i>
+				<i v-else-if="note.visibility === 'specified'" ref="specified" v-tooltip="i18n.ts._visibility[note.visibility]" class="ti ti-mail"></i>
+			</span>
+			<span v-if="note.reactionAcceptance != null" style="margin-left: 0.5em;" :class="{ [$style.danger]: ['nonSensitiveOnly', 'nonSensitiveOnlyForLocalLikeOnlyForRemote', 'likeOnly'].includes(<string>note.reactionAcceptance) }" :title="i18n.ts.reactionAcceptance">
+				<i v-if="note.reactionAcceptance === 'likeOnlyForRemote'" v-tooltip="i18n.ts.likeOnlyForRemote" class="ti ti-heart-plus"></i>
+				<i v-else-if="note.reactionAcceptance === 'nonSensitiveOnly'" v-tooltip="i18n.ts.nonSensitiveOnly" class="ti ti-icons"></i>
+				<i v-else-if="note.reactionAcceptance === 'nonSensitiveOnlyForLocalLikeOnlyForRemote'" v-tooltip="i18n.ts.nonSensitiveOnlyForLocalLikeOnlyForRemote" class="ti ti-heart-plus"></i>
+				<i v-else-if="note.reactionAcceptance === 'likeOnly'" v-tooltip="i18n.ts.likeOnly" class="ti ti-heart"></i>
+			</span>
+			<span v-if="note.localOnly" style="margin-left: 0.5em;"><i v-tooltip="i18n.ts._visibility['disableFederation']" class="ti ti-rocket-off"></i></span>
+			<span v-if="note.deliveryTargets && (note.deliveryTargets.mode === 'include' || note.deliveryTargets.hosts?.length)" style="margin-left: 0.5em;">
+				<i v-if="note.deliveryTargets.mode === 'include'" ref="deliveryTargetsIcon" class="ti ti-list-check"></i>
+				<i v-else ref="deliveryTargetsIcon" class="ti ti-list-details"></i>
+			</span>
+			<span v-if="note.channel" style="margin-left: 0.5em;"><i v-tooltip="note.channel.name" class="ti ti-device-tv"></i></span>
+			<span v-if="note.deleteAt" style="margin-left: 0.5em;" :title="i18n.tsx.noteDeletationAt({ time: dateTimeFormat.format(new Date(note.deleteAt)) })"><i class="ti ti-bomb"></i></span>
+		</div>
+		<MkInstanceTicker v-if="prefer.s.enableFirefishLikeNoteUI && showTicker" :class="ticker" :host="props.note.user.host" :instance="props.note.user.instance"/>
 	</div>
 </header>
 </template>
@@ -53,6 +73,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { inject, useTemplateRef } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkDeliveryTargetsDisplay from './MkDeliveryTargetsDisplay.vue';
+import MkInstanceTicker from '@/components/MkInstanceTicker.vue';
 import { i18n } from '@/i18n.js';
 import { notePage } from '@/filters/note.js';
 import { userPage } from '@/filters/user.js';
@@ -60,6 +81,7 @@ import { dateTimeFormat } from '@/utility/intl-const.js';
 import { DI } from '@/di.js';
 import { useTooltip } from '@/composables/use-tooltip.js';
 import * as os from '@/os.js';
+import { prefer } from '@/preferences.js';
 
 const props = defineProps<{
 	note: Misskey.entities.Note & {
@@ -73,6 +95,8 @@ const props = defineProps<{
 }>();
 
 const mock = inject(DI.mock, false);
+
+const showTicker = (prefer.s.instanceTicker === 'always') || (prefer.s.instanceTicker === 'remote' && props.note.user.instance);
 
 const deliveryTargetsIcon = useTemplateRef('deliveryTargetsIcon');
 
@@ -94,6 +118,77 @@ if (props.note.deliveryTargets && (props.note.deliveryTargets.mode === 'include'
 </script>
 
 <style lang="scss" module>
+.firefishLikeRoot {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
+	justify-self: flex-end;
+	border-radius: 100px;
+	width: 100%;
+	line-height: 1.5;
+}
+
+.firefishLikeInfo {
+	display: flex;              // inline-flex → flex
+	flex-direction: column;     // 中身を縦並び
+	align-items: flex-end;      // 右寄せ（右端でそろえる）
+
+	flex-shrink: 0;
+	margin-inline-start: auto;  // 0.5em → auto にして右側に押しやる
+	font-size: 0.9em;
+}
+
+.firefishLikeUser {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.firefishLikeName {
+	display: block; // inline のままでも動くけど block のほうが素直
+	margin-block-start: 0;
+	margin-inline-end: 0.5em;
+	margin-block-end: 0;
+	margin-inline-start: 0;
+	padding: 0;
+	overflow: hidden;
+	font-weight: bold;
+	text-decoration: none;
+	text-overflow: ellipsis;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.firefishLikeUserName {
+	display: block;
+	margin-block-start: 0;
+	margin-inline-end: 0.5em;
+	margin-block-end: 0;
+	margin-inline-start: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ticker {
+	/* インライン横並び用のスタイルをちょっと調整 */
+	display: inline-flex;
+	margin-inline-start: 0;        // 左余白は不要
+	margin-block-start: 0.2em;     // 上に少し余白をつけて時間と離す
+	vertical-align: middle;
+}
+
+.firefishLikeCreatedAt {
+	display: block;             // 念のためブロックにしておくと縦に並びやすい
+	max-inline-size: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 0.9em;
+}
+
 .root {
 	display: flex;
 	align-items: baseline;

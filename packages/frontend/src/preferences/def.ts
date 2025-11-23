@@ -771,4 +771,10 @@ export const PREF_DEF = definePreferences({
 	viewedRenotes: {
 		default: [] as string[],
 	},
+	enableFirefishLikeNoteUI: {
+		default: false,
+	},
+	showGapBetweenNotesInTimeline: {
+		default: false,
+	}
 });
