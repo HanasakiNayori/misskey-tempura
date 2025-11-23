@@ -1240,10 +1240,10 @@ function updateAvatarDecorationLimit(value: string | number) {
 }
 
 const rolePermissionDef = [
-	{ label: i18n.ts.normalUser, value: 'normal' },
-	{ label: i18n.ts.moderator, value: 'moderator' },
-	{ label: i18n.ts.administrator, value: 'administrator' },
-	{ label: i18n.ts.community, value: 'community' },
+	{ label: i18n.ts.normalUser, value: 'Normal' },
+	{ label: i18n.ts.moderator, value: 'Moderator' },
+	{ label: i18n.ts.administrator, value: 'Admin' },
+	{ label: i18n.ts.community, value: 'Community' },
 ] as const satisfies MkSelectItem[];
 
 const rolePermission = computed<GetMkSelectValueTypesFromDef<typeof rolePermissionDef>>({
