@@ -665,10 +665,6 @@ export const ROUTE_DEF = [{
 	component: page(() => import('@/pages/reversi/index.vue')),
 	loginRequired: false,
 }, {
-	path: '/taiko',
-	component: page(() => import('@/pages/taiko/index.vue')),
-	loginRequired: false,
-}, {
 	path: '/reversi/g/:gameId',
 	component: page(() => import('@/pages/reversi/game.vue')),
 	loginRequired: false,

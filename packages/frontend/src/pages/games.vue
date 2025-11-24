@@ -18,9 +18,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</MkA>
 			</div>
 			<div class="_panel" :class="$style.link">
-				<MkA to="/taiko">
-					<img src="/client-assets/games/taiko.png" style="display: block; max-width: 100%; max-height: 200px; margin: auto;"/>
-				</MkA>
 			</div>
 		</div>
 	</div>
