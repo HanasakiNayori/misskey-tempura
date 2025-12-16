@@ -16,7 +16,14 @@ import { actualClusterLimit, isHttpServerOnPrimary, jobQueue, server } from './c
 export async function workerMain(args: WorkerArguments) {
 	const config = loadConfig();
 
-	sentryInit(config);
+	if (config.sentryForBackend) {
+		const Sentry = await import('@sentry/node');
+		const { nodeProfilingIntegration } = await import('@sentry/profiling-node');
+
+		Sentry.init({
+			integrations: [
+				...(config.sentryForBackend.enableNodeProfiling ? [nodeProfilingIntegration()] : []),
+			],
 
 	if (args.__moduleServer) {
 		await server();
