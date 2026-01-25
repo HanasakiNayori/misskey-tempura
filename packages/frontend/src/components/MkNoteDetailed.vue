@@ -94,7 +94,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</div>
 					<MkInstanceTicker v-if="prefer.s.enableFirefishLikeNoteUI && showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
 				</div>
-				</header>
+			</header>
 			<div :class="$style.noteContent">
 				<p v-if="appearNote.cw != null" :class="$style.cw">
 					<Mfm
@@ -162,36 +162,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 					style="margin-top: 6px;"
 					:note="appearNote"
 				:reactions="$appearNote.reactions"
-				:reactionEmojis="$appearNote.reactionEmojis"
-				:myReaction="$appearNote.myReaction"
-				:noteId="appearNote.id"
-				:maxNumber="16"
-				@mockUpdateMyReaction="emitUpdReaction"
-			/>
-			<button class="_button" :class="$style.noteFooterButton" @click="reply()">
-				<i class="ti ti-arrow-back-up"></i>
-				<p v-if="appearNote.repliesCount > 0" :class="$style.noteFooterButtonCount">{{ number(appearNote.repliesCount) }}</p>
-			</button>
-			<button
-				v-if="canRenote"
-				ref="renoteButton"
-				class="_button"
-				:class="$style.noteFooterButton"
-				@mousedown.prevent="renote()"
-			>
-				<i class="ti ti-repeat"></i>
-				<p v-if="appearNote.renoteCount > 0" :class="$style.noteFooterButtonCount">{{ number(appearNote.renoteCount) }}</p>
-			</button>
-			<button v-else class="_button" :class="$style.noteFooterButton" disabled>
-				<i class="ti ti-ban"></i>
-			</button>
-			<button v-if="!prefer.s.directRenote && prefer.s.separateQuoteButton && canRenote" ref="quoteButton" v-tooltiop="i18n.ts.quote" :class="$style.noteFooterButton" class="_button" @click="quote()">
-				<i class="ti ti-quote"></i>
-			</button>
-			<button v-else-if="!prefer.s.directRenote && prefer.s.separateQuoteButton && !canRenote" :class="$style.noteFooterButton" class="_button" disabled>
-				<i class="ti ti-ban"></i>
-			</button>
-			<button v-if="appearNote.reactionAcceptance !== 'likeOnly' && $appearNote.myReaction == null && prefer.s.showLikeButton" ref="heartReactButton" v-tooltip="i18n.ts.like" :class="$style.noteFooterButton" class="_button" @click="toggleHeartReact()">
 					:reactionEmojis="$appearNote.reactionEmojis"
 					:myReaction="$appearNote.myReaction"
 					:noteId="appearNote.id"
@@ -214,6 +184,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</button>
 				<button v-else class="_button" :class="$style.noteFooterButton" disabled>
 					<i class="ti ti-ban"></i>
+				</button>
+				<button v-if="!prefer.s.directRenote && prefer.s.separateQuoteButton && canRenote" ref="quoteButton" v-tooltiop="i18n.ts.quote" :class="$style.noteFooterButton" class="_button" @click="quote()">
+					<i class="ti ti-quote"></i>
+				</button>
+				<button v-else-if="!prefer.s.directRenote && prefer.s.separateQuoteButton && !canRenote" :class="$style.noteFooterButton" class="_button" disabled>
+					<i class="ti ti-ban"></i>
+				</button>
+				<button v-if="prefer.s.showFavoriteButton" ref="favoriteButton" v-tooltip="i18n.ts.favorite" :class="$style.noteFooterButton" class="_button" @click="toggleFavorite()">
+					<i v-if="isFavorited" class="ti ti-star-filled" style="color: var(--MI_THEME-accent);"></i>
+					<i v-else class="ti ti-star"></i>
 				</button>
 				<button v-if="appearNote.reactionAcceptance !== 'likeOnly' && $appearNote.myReaction == null && prefer.s.showLikeButton" ref="heartReactButton" v-tooltip="i18n.ts.like" :class="$style.noteFooterButton" class="_button" @click="toggleHeartReact()">
 				<i class="ti ti-heart"></i>
