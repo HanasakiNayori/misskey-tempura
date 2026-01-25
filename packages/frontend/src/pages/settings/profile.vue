@@ -114,7 +114,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 		<SearchMarker :keywords="['follow', 'message']">
 			<MkInput v-model="profile.followedMessage" :max="200" manualSave :mfmPreview="false">
-				<template #label><SearchLabel>{{ i18n.ts._profile.followedMessage }}</SearchLabel><span class="_beta">{{ i18n.ts.beta }}</span></template>
+				<template #label><SearchLabel>{{ i18n.ts._profile.followedMessage }}</SearchLabel></template>
 				<template #caption>
 					<div><SearchText>{{ i18n.ts._profile.followedMessageDescription }}</SearchText></div>
 					<div>{{ i18n.ts._profile.followedMessageDescriptionForLockedAccount }}</div>
@@ -239,7 +239,7 @@ const profile = reactive({
 	followedMessage: $i.followedMessage,
 	location: $i.location,
 	birthday: $i.birthday,
-	listenbrainz: $i.listenbrainz,
+	listenbrainz: ($i as any).ListenBrainz ?? ($i as any).listenbrainz ?? null,
 	lang: assertVaildLang($i.lang) ? $i.lang : null,
 	isBot: $i.isBot ?? false,
 	isCat: $i.isCat ?? false,
@@ -289,7 +289,7 @@ function save() {
 		location: profile.location || null,
 		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 		birthday: profile.birthday || null,
-		listenbrainz: profile.listenbrainz || null,
+		listenbrainz: (profile as any).listenbrainz ?? (profile as any).ListenBrainz ?? null,
 		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 		lang: profile.lang || null,
 		isBot: !!profile.isBot,

@@ -1239,12 +1239,13 @@ function updateAvatarDecorationLimit(value: string | number) {
 	role.value.policies.avatarDecorationLimit.value = limited;
 }
 
-const rolePermissionDef = [
+// Use API enum values so validation passes
+const rolePermissionDef: MkSelectItem[] = [
 	{ label: i18n.ts.normalUser, value: 'Normal' },
-	{ label: i18n.ts.moderator, value: 'Moderator' },
+	{ label: i18n.ts.moderator, value: 'MainModerator' },
 	{ label: i18n.ts.administrator, value: 'Admin' },
 	{ label: i18n.ts.community, value: 'Community' },
-] as const satisfies MkSelectItem[];
+];
 
 const rolePermission = computed<GetMkSelectValueTypesFromDef<typeof rolePermissionDef>>({
 	get: () => role.value.permissionGroup,

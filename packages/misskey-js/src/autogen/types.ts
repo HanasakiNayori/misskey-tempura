@@ -5986,6 +5986,7 @@ export type components = {
             infoImageUrl: string | null;
             notFoundImageUrl: string | null;
             youBlockedImageUrl: string | null;
+            customSplashText: string[] | null;
             iconUrl: string | null;
             enableLongIconUrl: boolean;
             longIconUrl: string | null;
@@ -6067,13 +6068,15 @@ export type components = {
             entranceShowFeatured: boolean;
             /** @default false */
             entranceShowEmojis: boolean;
-            /** @default [
+            /**
+             * @default [
              *       "👍",
              *       "❤",
              *       "😆",
              *       "🎉",
              *       "🍮"
-             *     ] */
+             *     ]
+             */
             entranceSelectEmojis: string[];
             /** @default false */
             entranceShowStats: boolean;
@@ -10817,6 +10820,7 @@ export interface operations {
                         urlPreviewSummaryProxyUrl: string | null;
                         /** @enum {string} */
                         federation: 'all' | 'specified' | 'none';
+                        federationHosts: string[];
                         customSplashText: string[];
                         blockMentionsFromUnfamiliarRemoteUsers: boolean;
                         validateMinimumUsernameLength: number;

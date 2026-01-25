@@ -16,6 +16,7 @@ import { ChannelFollowingService } from '@/core/ChannelFollowingService.js';
 import { ChannelMutingService } from '@/core/ChannelMutingService.js';
 import { isJsonObject } from '@/misc/json-value.js';
 import type { JsonObject, JsonValue } from '@/misc/json-value.js';
+import { applyAvatarDecorationMuting } from './applyAvatarDecorationMuting.js';
 import type { ChannelsService } from './ChannelsService.js';
 import type { EventEmitter } from 'events';
 import type Channel from './channel.js';
@@ -69,7 +70,9 @@ export default class Connection {
 			userIdsWhoMeMuting,
 			userIdsWhoBlockingMe,
 			userIdsWhoMeMutingRenotes,
-		, userIdsWhoMeMutingQuotes, userIdsWhoMeMutingAvatarDecorations] = await Promise.all([
+			userIdsWhoMeMutingQuotes,
+			userIdsWhoMeMutingAvatarDecorations,
+		] = await Promise.all([
 			this.cacheService.userProfileCache.fetch(this.user.id),
 			this.cacheService.userFollowingsCache.fetch(this.user.id),
 			this.channelFollowingService.userFollowingChannelsCache.fetch(this.user.id),
@@ -235,6 +238,10 @@ export default class Connection {
 	 */
 	@bindThis
 	public sendMessageToWs(type: string, payload: JsonObject) {
+		if (this.user != null && this.userIdsWhoMeMutingAvatarDecorations.size > 0) {
+			applyAvatarDecorationMuting(payload, this.userIdsWhoMeMutingAvatarDecorations);
+		}
+
 		this.wsConnection.send(JSON.stringify({
 			type: type,
 			body: payload,
