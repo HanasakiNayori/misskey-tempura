@@ -11,16 +11,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div v-if="!(prefer.s.anonymizeMutedUsers && user.isMuted) && user.isCat" :class="[$style.ears]">
 		<div :class="$style.earLeft">
 			<div v-if="false" :class="$style.layer">
-				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"/>
-				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"/>
-				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"/>
+				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"></div>
+				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"></div>
+				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"></div>
 			</div>
 		</div>
 		<div :class="$style.earRight">
 			<div v-if="false" :class="$style.layer">
-				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"/>
-				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"/>
-				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"/>
+				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"></div>
+				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"></div>
+				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"></div>
 			</div>
 		</div>
 	</div>
@@ -33,6 +33,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				rotate: getDecorationAngle(decoration),
 				scale: getDecorationScale(decoration),
 				translate: getDecorationOffset(decoration),
+				zIndex: getDecorationZIndex(decoration),
 			}"
 			alt=""
 			draggable="false"
@@ -80,7 +81,7 @@ const props = withDefaults(defineProps<{
 });
 
 const emit = defineEmits<{
-	(ev: 'click', v: MouseEvent): void;
+	(ev: 'click', v: PointerEvent): void;
 }>();
 
 const showDecoration = props.forceShowDecoration || prefer.s.showAvatarDecorations;
@@ -94,7 +95,7 @@ const url = computed(() => {
 	return props.user.avatarUrl;
 });
 
-function onClick(ev: MouseEvent): void {
+function onClick(ev: PointerEvent): void {
 	if (props.link) return;
 	emit('click', ev);
 }
@@ -118,6 +119,10 @@ function getDecorationOffset(decoration: Decoration | DecorationEditorDecoration
 	const offsetX = decoration.offsetX ?? 0;
 	const offsetY = decoration.offsetY ?? 0;
 	return offsetX === 0 && offsetY === 0 ? undefined : `${offsetX * 100}% ${offsetY * 100}%`;
+}
+
+function getDecorationZIndex(decoration: Omit<Misskey.entities.UserDetailed['avatarDecorations'][number], 'id'>) {
+	return decoration.showBehind ? '-1' : undefined;
 }
 
 function getDecorationIsBrink(decoration: Decoration | DecorationEditorDecoration) {
@@ -170,6 +175,7 @@ watch(() => props.user.avatarBlurhash, () => {
 	flex-shrink: 0;
 	border-radius: 100%;
 	line-height: 16px;
+	z-index: 0;
 }
 
 .inner {

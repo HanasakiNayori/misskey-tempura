@@ -13,13 +13,13 @@ import type {
 	Role,
 	ReversiGameDetailed,
 	SystemWebhook,
-	UserLite,
 	ChatRoom,
 } from './autogen/models.js';
 
 export const notificationTypes = [
 	'note',
 	'follow',
+	'unfollow',
 	'mention',
 	'reply',
 	'renote',
@@ -317,6 +317,7 @@ type AvatarDecoration = {
 	flipH?: boolean;
 	offsetX?: number;
 	offsetY?: number;
+	showBehind?: boolean;
 };
 
 type ReceivedAbuseReport = {

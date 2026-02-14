@@ -541,6 +541,7 @@ export class UserEntityService implements OnModuleInit {
 				flipH: ud.flipH || undefined,
 				offsetX: ud.offsetX || undefined,
 				offsetY: ud.offsetY || undefined,
+				showBehind: ud.showBehind || undefined,
 				url: decorations.find(d => d.id === ud.id)!.url,
 			}))) : [],
 			isBot: user.isBot,
@@ -793,7 +794,7 @@ export class UserEntityService implements OnModuleInit {
 				me,
 				{
 					...options,
-					userProfile: profilesMap.get(u.id),
+					userProfile: profilesMap?.get(u.id),
 					userRelations: userRelations,
 					userMemos: userMemos,
 					pinNotes: pinNotes,
