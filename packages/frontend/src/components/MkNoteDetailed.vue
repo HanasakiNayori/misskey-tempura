@@ -91,7 +91,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<MkA :to="notePage(note)">
 						<MkTime :time="note.createdAt" colored/>
 					</MkA>
-						<MkInstanceTicker v-if="showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
 						<span v-if="appearNote.visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[appearNote.visibility]">
 						<i v-if="appearNote.visibility === 'home'" class="ti ti-home"></i>
 							<i v-else-if="appearNote.visibility === 'followers'" class="ti ti-lock"></i>
