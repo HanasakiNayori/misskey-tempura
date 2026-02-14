@@ -32,7 +32,7 @@ import type { WidgetComponentEmits, WidgetComponentExpose, WidgetComponentProps 
 import type { FormWithDefault, GetFormResultType } from '@/utility/form.js';
 import MkContainer from '@/components/MkContainer.vue';
 import MkMiniChart from '@/components/MkMiniChart.vue';
-import { misskeyApiGet } from '@/utility/misskey-api.js';
+import { misskeyApi } from '@/utility/misskey-api.js';
 import { i18n } from '@/i18n.js';
 import { prefer } from '@/preferences.js';
 
@@ -61,7 +61,7 @@ const stats = ref<Misskey.entities.HashtagsTrendResponse>([]);
 const fetching = ref(true);
 
 const fetch = () => {
-	misskeyApiGet('hashtags/trend').then(res => {
+	misskeyApi('hashtags/trend').then(res => {
 		stats.value = res;
 		fetching.value = false;
 	});
