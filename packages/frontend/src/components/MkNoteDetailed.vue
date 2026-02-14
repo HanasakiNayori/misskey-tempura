@@ -59,7 +59,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<MkUserName :nowrap="false" :user="appearNote.user"/>
 						</MkA>
 						<span v-if="appearNote.user.isBot" :class="$style.isBot">bot</span>
-						<div :class="$style.noteHeaderInfo">
+						<div v-if=!prefer.s.enableFirefishLikeNoteUI :class="$style.noteHeaderInfo">
 							<span v-if="appearNote.visibility === 'public' && appearNote.dontShowOnLtl === true" style="margin-left: 0.5em;" :title="i18n.ts._visibility['public_non_ltl']">
 							<i class="ti ti-broadcast"></i>
 						</span>
@@ -87,10 +87,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<MkInstanceTicker v-if="!prefer.s.enableFirefishLikeNoteUI && showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
 				</div>
 				<div :class="$style.firefishLikeInfo">
-					<div :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeCreatedAt : null">
-						<MkA :to="notePage(note)">
-							<MkTime :time="note.createdAt" colored/>
-						</MkA>
+					<div v-if=prefer.s.enableFirefishLikeNoteUI :class="prefer.s.enableFirefishLikeNoteUI ? $style.firefishLikeCreatedAt : null">
+					<MkA :to="notePage(note)">
+						<MkTime :time="note.createdAt" colored/>
+					</MkA>
+						<MkInstanceTicker v-if="showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
+						<span v-if="appearNote.visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[appearNote.visibility]">
+						<i v-if="appearNote.visibility === 'home'" class="ti ti-home"></i>
+							<i v-else-if="appearNote.visibility === 'followers'" class="ti ti-lock"></i>
+							<i v-else-if="appearNote.visibility === 'specified'" ref="specified" class="ti ti-mail"></i>
+						</span>
 					</div>
 					<MkInstanceTicker v-if="prefer.s.enableFirefishLikeNoteUI && showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
 				</div>
