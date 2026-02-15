@@ -31,7 +31,7 @@ import XMemory from './mem.vue';
 import XDisk from './disk.vue';
 import MkContainer from '@/components/MkContainer.vue';
 import type { FormWithDefault, GetFormResultType } from '@/utility/form.js';
-import { misskeyApiGet } from '@/utility/misskey-api.js';
+import { misskeyApi } from '@/utility/misskey-api.js';
 import { useStream } from '@/stream.js';
 import { i18n } from '@/i18n.js';
 
@@ -68,7 +68,7 @@ const { widgetProps, configure, save } = useWidgetPropsManager(name,
 
 const meta = ref<Misskey.entities.ServerInfoResponse | null>(null);
 
-misskeyApiGet('server-info', {}).then(res => {
+misskeyApi('server-info', {}).then(res => {
 	meta.value = res;
 });
 
