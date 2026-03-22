@@ -692,6 +692,39 @@ declare module '../api.js' {
     /**
      * No description provided.
      * 
+     * **Credential required**: *Yes* / **Permission**: *read:admin:llm-moderation*
+     */
+    request<E extends 'admin/llm-moderation/queue', P extends Endpoints[E]['req']>(
+      endpoint: E,
+      params: P,
+      credential?: string | null,
+    ): Promise<SwitchCaseResponseType<E, P>>;
+
+    /**
+     * No description provided.
+     * 
+     * **Credential required**: *Yes* / **Permission**: *write:admin:llm-moderation*
+     */
+    request<E extends 'admin/llm-moderation/queue/resolve', P extends Endpoints[E]['req']>(
+      endpoint: E,
+      params: P,
+      credential?: string | null,
+    ): Promise<SwitchCaseResponseType<E, P>>;
+
+    /**
+     * No description provided.
+     * 
+     * **Credential required**: *Yes* / **Permission**: *write:admin:llm-moderation*
+     */
+    request<E extends 'admin/llm-moderation/queue/update', P extends Endpoints[E]['req']>(
+      endpoint: E,
+      params: P,
+      credential?: string | null,
+    ): Promise<SwitchCaseResponseType<E, P>>;
+
+    /**
+     * No description provided.
+     * 
      * **Credential required**: *Yes* / **Permission**: *read:admin:meta*
      */
     request<E extends 'admin/meta', P extends Endpoints[E]['req']>(
@@ -4955,11 +4988,11 @@ declare module '../api.js' {
     ): Promise<SwitchCaseResponseType<E, P>>;
 
     /**
-     * Find users who have a birthday on the specified range.
+     * Retrieve users who have a birthday on the specified range.
      * 
      * **Credential required**: *Yes* / **Permission**: *read:account*
      */
-    request<E extends 'users/get-following-birthday-users', P extends Endpoints[E]['req']>(
+    request<E extends 'users/get-following-users-by-birthday', P extends Endpoints[E]['req']>(
       endpoint: E,
       params: P,
       credential?: string | null,

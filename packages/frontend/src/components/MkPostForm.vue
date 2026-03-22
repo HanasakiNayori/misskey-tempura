@@ -34,8 +34,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<span :class="$style.headerRightButtonText">{{ targetChannel.name }}</span>
 				</button>
 			</template>
-			<button v-if="visibility === 'specified'" v-click-anime v-tooltip="i18n.ts.save" class="_button" :class="$style.headerRightItem" @click="saveCurrentUsers"><i class="ti ti-device-floppy"/></button>
-			<button v-if="visibility === 'specified'" v-click-anime v-tooltip="i18n.ts.load" class="_button" :class="$style.headerRightItem" @click="loadSavedUsers"><i class="ti ti-users"/></button>
+			<button v-if="visibility === 'specified'" v-click-anime v-tooltip="i18n.ts.save" class="_button" :class="$style.headerRightItem" @click="saveCurrentUsers"><i class="ti ti-device-floppy"></i></button>
+			<button v-if="visibility === 'specified'" v-click-anime v-tooltip="i18n.ts.load" class="_button" :class="$style.headerRightItem" @click="loadSavedUsers"><i class="ti ti-users"></i></button>
 			<button v-if="visibility !== 'specified'" v-tooltip="i18n.ts._visibility.disableFederation" class="_button" :class="[$style.headerRightItem, { [$style.danger]: localOnly }]" :disabled="targetChannel != null" @click="toggleLocalOnly">
 				<span v-if="!localOnly"><i class="ti ti-rocket"></i></span>
 				<span v-else><i class="ti ti-rocket-off"></i></span>
@@ -117,7 +117,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { watch, nextTick, onMounted, defineAsyncComponent, provide, shallowRef, ref, computed, reactive, useTemplateRef, onUnmounted } from 'vue';
+import { watch, nextTick, onMounted, defineAsyncComponent, provide, shallowRef, ref, computed, reactive, useTemplateRef, onUnmounted, onBeforeUnmount } from 'vue';
 import * as mfm from 'mfm-js';
 import * as Misskey from 'misskey-js';
 import insertTextAtCursor from 'insert-text-at-cursor';
@@ -244,6 +244,10 @@ const serverDraftId = ref<string | null>(null);
 const dontShowOnLtl = computed(() => visibility.value === 'public_non_ltl');
 const postFormActions = getPluginHandlers('post_form_action');
 const normalizedPostFormActions = computed(() => normalizePostFormActions(prefer.r.postFormActions.value));
+
+let textAutocomplete: Autocomplete | null = null;
+let cwAutocomplete: Autocomplete | null = null;
+let hashtagAutocomplete: Autocomplete | null = null;
 
 const uploader = useUploader({
 	multiple: true,
@@ -598,7 +602,7 @@ function focus() {
 
 function postFormFileUpload(ev: MouseEvent) {
 	if (prefer.s.chooseFileFrom === 'new') {
-		chooseFileFromPc(ev);
+		chooseFileFromPc();
 	} else {
 		chooseFileFrom(ev);
 	}
@@ -617,7 +621,7 @@ function chooseFileFrom(ev: MouseEvent) {
 	});
 }
 
-function chooseFileFromPc(ev: PointerEvent) {
+function chooseFileFromPc() {
 	if (props.mock) return;
 
 	os.chooseFileFromPc({ multiple: true }).then(files => {
@@ -626,7 +630,7 @@ function chooseFileFromPc(ev: PointerEvent) {
 	});
 }
 
-function chooseFileFromDrive(ev: PointerEvent) {
+function chooseFileFromDrive() {
 	if (props.mock) return;
 
 	chooseDriveFile({ multiple: true }).then(driveFiles => {
@@ -994,7 +998,7 @@ type StoredDrafts = {
 			text: string;
 			useCw: boolean;
 			cw: string | null;
-			visibility: 'public' | 'home' | 'followers' | 'specified';
+			visibility: 'public' | 'public_non_ltl' | 'home' | 'followers' | 'specified';
 			localOnly: boolean;
 			files: Misskey.entities.DriveFile[];
 			poll: PollEditorModelValue | null;
@@ -1002,6 +1006,7 @@ type StoredDrafts = {
 			quoteId: string | null;
 			reactionAcceptance: 'likeOnly' | 'likeOnlyForRemote' | 'nonSensitiveOnly' | 'nonSensitiveOnlyForLocalLikeOnlyForRemote' | null;
 			scheduledAt: number | null;
+			scheduledNoteDelete?: DeleteScheduleEditorModelValue | null;
 		};
 	};
 };
@@ -1565,10 +1570,9 @@ onMounted(() => {
 		});
 	}
 
-	// TODO: detach when unmount
-	if (textareaEl.value) new Autocomplete(textareaEl.value, text);
-	if (cwInputEl.value) new Autocomplete(cwInputEl.value, cw);
-	if (hashtagsInputEl.value) new Autocomplete(hashtagsInputEl.value, hashtags);
+	if (textareaEl.value) textAutocomplete = new Autocomplete(textareaEl.value, text);
+	if (cwInputEl.value) cwAutocomplete = new Autocomplete(cwInputEl.value, cw);
+	if (hashtagsInputEl.value) hashtagAutocomplete = new Autocomplete(hashtagsInputEl.value, hashtags);
 
 	nextTick(() => {
 		// 書きかけの投稿を復元
@@ -1626,6 +1630,19 @@ onMounted(() => {
 
 		nextTick(() => watchForDraft());
 	});
+});
+
+onBeforeUnmount(() => {
+	uploader.abortAll();
+	if (textAutocomplete) {
+		textAutocomplete.detach();
+	}
+	if (cwAutocomplete) {
+		cwAutocomplete.detach();
+	}
+	if (hashtagAutocomplete) {
+		hashtagAutocomplete.detach();
+	}
 });
 
 async function canClose() {

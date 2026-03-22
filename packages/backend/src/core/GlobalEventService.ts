@@ -15,6 +15,7 @@ import type { MiDriveFile } from '@/models/DriveFile.js';
 import type { MiDriveFolder } from '@/models/DriveFolder.js';
 import type { MiUserList } from '@/models/UserList.js';
 import type { MiAbuseUserReport } from '@/models/AbuseUserReport.js';
+import type { MiLlmModerationQueue } from '@/models/LlmModerationQueue.js';
 import type { MiSignin } from '@/models/Signin.js';
 import type { MiPage } from '@/models/Page.js';
 import type { MiWebhook } from '@/models/Webhook.js';
@@ -134,6 +135,9 @@ export interface NoteEventTypes {
 type NoteStreamEventTypes = {
 	[key in keyof NoteEventTypes]: {
 		id: MiNote['id'];
+		userId: MiNote['userId'];
+		visibility: MiNote['visibility'];
+		visibleUserIds: MiNote['visibleUserIds'];
 		body: NoteEventTypes[key];
 	};
 };
@@ -157,6 +161,12 @@ export interface AdminEventTypes {
 		targetUserId: MiUser['id'],
 		reporterId: MiUser['id'],
 		comment: string;
+	};
+	newLlmModerationQueueItem: {
+		id: MiLlmModerationQueue['id'];
+		noteId: MiNote['id'];
+		noteUserId: MiUser['id'];
+		flaggedCategories: string[];
 	};
 }
 
@@ -385,9 +395,12 @@ export class GlobalEventService {
 	}
 
 	@bindThis
-	public publishNoteStream<K extends keyof NoteEventTypes>(noteId: MiNote['id'], type: K, value?: NoteEventTypes[K]): void {
-		this.publish(`noteStream:${noteId}`, type, {
-			id: noteId,
+	public publishNoteStream<K extends keyof NoteEventTypes>(note: MiNote, type: K, value?: NoteEventTypes[K]): void {
+		this.publish(`noteStream:${note.id}`, type, {
+			id: note.id,
+			userId: note.userId,
+			visibility: note.visibility,
+			visibleUserIds: note.visibleUserIds,
 			body: value,
 		});
 	}

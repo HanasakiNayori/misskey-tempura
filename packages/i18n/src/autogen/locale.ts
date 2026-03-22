@@ -669,6 +669,10 @@ export interface Locale extends ILocale {
      */
     "unsuspend": string;
     /**
+     * 保留中
+     */
+    "pending": string;
+    /**
      * ブロックしますか？
      */
     "blockConfirm": string;
@@ -1952,6 +1956,54 @@ export interface Locale extends ILocale {
      * モデログ
      */
     "moderationLogs": string;
+    /**
+     * LLMモデレーション
+     */
+    "llmModeration": string;
+    /**
+     * LLMモデレーションキュー
+     */
+    "llmModerationQueue": string;
+    /**
+     * LLMモデレーション
+     */
+    "openLlmModeration": string;
+    /**
+     * LLMモデレーションAPIで投稿を検出し、モデレーターの確認用にフラグを立てます。
+     */
+    "openLlmModerationDescription": string;
+    /**
+     * LLMモデレーションを有効化
+     */
+    "openLlmModerationEnabled": string;
+    /**
+     * LLM APIキー
+     */
+    "openLlmModerationApiKey": string;
+    /**
+     * サーバーに保存されます。秘密にしてください。
+     */
+    "openLlmModerationApiKeyDescription": string;
+    /**
+     * リモート投稿も対象にする
+     */
+    "openLlmModerationIncludeRemote": string;
+    /**
+     * 連合先の投稿もチェックします。
+     */
+    "openLlmModerationIncludeRemoteDescription": string;
+    /**
+     * 対象の公開範囲
+     */
+    "openLlmModerationVisibilities": string;
+    /**
+     * 選択した公開範囲のみAPIへ送信します。
+     */
+    "openLlmModerationVisibilitiesDescription": string;
+    /**
+     * モデレーションキューを開く
+     */
+    "openLlmModerationQueueLink": string;
     /**
      * {n}人が投稿
      */
@@ -4036,6 +4088,14 @@ export interface Locale extends ILocale {
      * 未対応の通報があります。
      */
     "thereIsUnresolvedAbuseReportWarning": string;
+    /**
+     * 未対応のLLMモデレーション項目があります。
+     */
+    "thereIsUnresolvedLlmModerationQueueWarning": string;
+    /**
+     * LLMモデレーションの新しい項目があります。
+     */
+    "newLlmModerationQueueItem": string;
     /**
      * 承認待ちのユーザーがいます。
      */
@@ -6585,6 +6645,56 @@ export interface Locale extends ILocale {
          */
         "resolveTutorial": string;
     };
+    "_llmModerationQueue": {
+        /**
+         * LLMモデレーションでフラグされた投稿がここに表示されます。
+         */
+        "description": string;
+        /**
+         * 投稿元
+         */
+        "origin": string;
+        /**
+         * フラグカテゴリ
+         */
+        "flaggedCategories": string;
+        /**
+         * カテゴリスコア
+         */
+        "categoryScores": string;
+        /**
+         * 警告を送る
+         */
+        "warnUser": string;
+        /**
+         * 通知メッセージ
+         */
+        "warnUserPrompt": string;
+        /**
+         * 投稿を削除
+         */
+        "deleteNote": string;
+        /**
+         * この投稿を削除しますか？
+         */
+        "deleteNoteConfirm": string;
+        /**
+         * ユーザーを凍結
+         */
+        "suspendUser": string;
+        /**
+         * このユーザーを凍結しますか？
+         */
+        "suspendUserConfirm": string;
+        /**
+         * 解決
+         */
+        "resolve": string;
+        /**
+         * 投稿が見つからないか削除されています。
+         */
+        "noteMissing": string;
+    };
     "_delivery": {
         /**
          * 配信状態
@@ -8646,11 +8756,11 @@ export interface Locale extends ILocale {
             /**
              * 最終アクティブ日時が～未満
              */
-            "activedMoreThan": string;
+            "activatedMoreThan": string;
             /**
              * 最終アクティブ日時が～以上
              */
-            "activedLessThan": string;
+            "activatedLessThan": string;
             /**
              * ～かつ～
              */
@@ -9802,6 +9912,10 @@ export interface Locale extends ILocale {
          */
         "write:mutes": string;
         /**
+         * ノートを見る
+         */
+        "read:notes": string;
+        /**
          * ノートを作成・削除する
          */
         "write:notes": string;
@@ -9894,6 +10008,18 @@ export interface Locale extends ILocale {
          */
         "read:admin:abuse-user-reports": string;
         /**
+         * LLMモデレーションキューを見る
+         */
+        "read:admin:llm-moderation": string;
+        /**
+         * アカウントの承認を行う
+         */
+        "write:admin:approve-account": string;
+        /**
+         * アカウントの承認を却下する
+         */
+        "write:admin:decline-account": string;
+        /**
          * ユーザーアカウントを削除する
          */
         "write:admin:delete-account": string;
@@ -9929,6 +10055,10 @@ export interface Locale extends ILocale {
          * ユーザーからの通報を解決する
          */
         "write:admin:resolve-abuse-user-report": string;
+        /**
+         * LLMモデレーションキューを管理する
+         */
+        "write:admin:llm-moderation": string;
         /**
          * メールを送る
          */
@@ -9985,6 +10115,10 @@ export interface Locale extends ILocale {
          * モデレーションノートを操作する
          */
         "write:admin:user-note": string;
+        /**
+         * ユーザーの相互リンクを設定する
+         */
+        "write:admin:user-mutual-link": string;
         /**
          * ロールを操作する
          */
@@ -11396,6 +11530,18 @@ export interface Locale extends ILocale {
          */
         "testNotification": string;
         /**
+         * LLMモデレーションキュー
+         */
+        "llmModerationQueue": string;
+        /**
+         * LLMモデレーションキューに新しい項目があります。
+         */
+        "llmModerationQueueDescription": string;
+        /**
+         * LLMモデレーションキューを開く
+         */
+        "llmModerationQueueLink": string;
+        /**
          * 通知の表示を確かめる
          */
         "checkNotificationBehavior": string;
@@ -11566,6 +11712,10 @@ export interface Locale extends ILocale {
              * 通知のテスト
              */
             "test": string;
+            /**
+             * LLMモデレーションキュー
+             */
+            "llmModerationQueue": string;
             /**
              * 連携アプリからの通知
              */
@@ -12014,6 +12164,10 @@ export interface Locale extends ILocale {
          */
         "createUserAnnouncement": string;
         /**
+         * ロール対象のお知らせを作成
+         */
+        "createRolesAnnouncement": string;
+        /**
          * 全体のお知らせを更新
          */
         "updateGlobalAnnouncement": string;
@@ -12022,6 +12176,10 @@ export interface Locale extends ILocale {
          */
         "updateUserAnnouncement": string;
         /**
+         * ロール対象のお知らせを更新
+         */
+        "updateRolesAnnouncement": string;
+        /**
          * 全体のお知らせを削除
          */
         "deleteGlobalAnnouncement": string;
@@ -12029,6 +12187,10 @@ export interface Locale extends ILocale {
          * ユーザーのお知らせを削除
          */
         "deleteUserAnnouncement": string;
+        /**
+         * ロール対象のお知らせを削除
+         */
+        "deleteRolesAnnouncement": string;
         /**
          * パスワードをリセット
          */
@@ -12101,6 +12263,10 @@ export interface Locale extends ILocale {
          * ユーザーのバナーを解除
          */
         "unsetUserBanner": string;
+        /**
+         * ユーザーの相互リンクを解除
+         */
+        "unsetUserMutualLink": string;
         /**
          * SystemWebhookを作成
          */
