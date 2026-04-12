@@ -132,7 +132,7 @@ onMounted(async () => {
 		federationSubActiveDiff.value = chart.subActive[0] - chart.subActive[1];
 	});
 
-	misskeyApi('federation/stats', { limit: 10 }).then(res => {
+	misskeyApiGet('federation/stats', { limit: 10 }).then(res => {
 		topSubInstancesForPie.value = [
 			...res.topSubInstances.map(x => ({
 				name: x.host,
