@@ -64,7 +64,7 @@ import MkChart from '@/components/MkChart.vue';
 import { useChartTooltip } from '@/composables/use-chart-tooltip.js';
 import { $i } from '@/i.js';
 import * as os from '@/os.js';
-import { misskeyApiGet } from '@/utility/misskey-api.js';
+import { misskeyApi, misskeyApiGet } from '@/utility/misskey-api.js';
 import { instance } from '@/instance.js';
 import { i18n } from '@/i18n.js';
 import MkHeatmap from '@/components/MkHeatmap.vue';
@@ -229,7 +229,7 @@ function createDoughnut(chartEl: HTMLCanvasElement, tooltip: ReturnType<typeof u
 }
 
 onMounted(() => {
-	misskeyApiGet('federation/stats', { limit: 30 }).then(fedStats => {
+	misskeyApi('federation/stats', { limit: 30 }).then(fedStats => {
 		const subs: ChartData = fedStats.topSubInstances.map(x => ({
 			name: x.host,
 			color: x.themeColor ?? '#888888',
