@@ -18,7 +18,7 @@ import { ref } from 'vue';
 import { useWidgetPropsManager } from './widget.js';
 import type { WidgetComponentEmits, WidgetComponentExpose, WidgetComponentProps } from './widget.js';
 import type { FormWithDefault, GetFormResultType } from '@/utility/form.js';
-import { misskeyApiGet } from '@/utility/misskey-api.js';
+import { misskeyApi, misskeyApiGet } from '@/utility/misskey-api.js';
 import { useInterval } from '@@/js/use-interval.js';
 import { i18n } from '@/i18n.js';
 import number from '@/filters/number.js';
@@ -47,7 +47,7 @@ const { widgetProps, configure } = useWidgetPropsManager(name,
 const onlineUsersCount = ref(0);
 
 const tick = () => {
-	misskeyApiGet('get-online-users-count').then(res => {
+	misskeyApi('get-online-users-count').then(res => {
 		onlineUsersCount.value = res.count;
 	});
 };

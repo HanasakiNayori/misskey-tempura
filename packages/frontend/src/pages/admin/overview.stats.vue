@@ -80,7 +80,7 @@ const fetching = ref(true);
 onMounted(async () => {
 	const [_stats, _onlineUsersCount] = await Promise.all([
 		misskeyApi('stats', {}),
-		misskeyApiGet('get-online-users-count').then(res => res.count),
+		misskeyApi('get-online-users-count').then(res => res.count),
 	]);
 	stats.value = _stats;
 	onlineUsersCount.value = _onlineUsersCount;
