@@ -259,6 +259,19 @@ export function getNoteMenu(props: {
 		});
 	}
 
+	function makePrivate(): void {
+	os.confirm({
+		type: 'warning',
+		text: `${i18n.ts._makePrivate.description} ${i18n.ts._makePrivate.confirm}`,
+	}).then(({ canceled }) => {
+		if (canceled) return;
+
+		misskeyApi('notes/make-private', {
+			noteId: appearNote.id,
+		});
+	});
+	}
+
 	function toggleFavorite(favorite: boolean): void {
 		claimAchievement('noteFavorited1');
 		os.apiWithDialog(favorite ? 'notes/favorites/create' : 'notes/favorites/delete', {
