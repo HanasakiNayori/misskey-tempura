@@ -55,7 +55,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { onMounted, computed, useTemplateRef } from 'vue';
+import { onMounted, onUnmounted, computed, useTemplateRef } from 'vue';
 import { Chart } from 'chart.js';
 import type { MkSelectItem, ItemOption } from '@/components/MkSelect.vue';
 import type { ChartSrc } from '@/components/MkChart.vue';
@@ -64,7 +64,7 @@ import MkChart from '@/components/MkChart.vue';
 import { useChartTooltip } from '@/composables/use-chart-tooltip.js';
 import { $i } from '@/i.js';
 import * as os from '@/os.js';
-import { misskeyApiGet } from '@/utility/misskey-api.js';
+import { misskeyApi, misskeyApiGet } from '@/utility/misskey-api.js';
 import { instance } from '@/instance.js';
 import { i18n } from '@/i18n.js';
 import MkHeatmap from '@/components/MkHeatmap.vue';
@@ -163,8 +163,12 @@ const {
 	]),
 	initialValue: 'active-users',
 });
+
 const subDoughnutEl = useTemplateRef('subDoughnutEl');
 const pubDoughnutEl = useTemplateRef('pubDoughnutEl');
+
+let subDoughnutChartInstance: Chart | null = null;
+let pubDoughnutChartInstance: Chart | null = null;
 
 const { handler: externalTooltipHandler1 } = useChartTooltip({
 	position: 'middle',
@@ -230,7 +234,7 @@ function createDoughnut(chartEl: HTMLCanvasElement, tooltip: ReturnType<typeof u
 }
 
 onMounted(() => {
-	misskeyApiGet('federation/stats', { limit: 30 }).then(fedStats => {
+	misskeyApi('federation/stats', { limit: 30 }).then(fedStats => {
 		const subs: ChartData = fedStats.topSubInstances.map(x => ({
 			name: x.host,
 			color: x.themeColor ?? '#888888',
@@ -246,7 +250,9 @@ onMounted(() => {
 			value: fedStats.otherFollowersCount,
 		});
 
-		if (subDoughnutEl.value != null) createDoughnut(subDoughnutEl.value, externalTooltipHandler1, subs);
+		if (subDoughnutEl.value != null) {
+			subDoughnutChartInstance = createDoughnut(subDoughnutEl.value, externalTooltipHandler1, subs);
+		}
 
 		const pubs: ChartData = fedStats.topPubInstances.map(x => ({
 			name: x.host,
@@ -263,8 +269,15 @@ onMounted(() => {
 			value: fedStats.otherFollowingCount,
 		});
 
-		if (pubDoughnutEl.value != null) createDoughnut(pubDoughnutEl.value, externalTooltipHandler2, pubs);
+		if (pubDoughnutEl.value != null) {
+			pubDoughnutChartInstance = createDoughnut(pubDoughnutEl.value, externalTooltipHandler2, pubs);
+		}
 	});
+});
+
+onUnmounted(() => {
+	subDoughnutChartInstance?.destroy();
+	pubDoughnutChartInstance?.destroy();
 });
 </script>
 

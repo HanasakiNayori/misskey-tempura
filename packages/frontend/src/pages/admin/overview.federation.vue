@@ -50,7 +50,7 @@ import { onMounted, ref } from 'vue';
 import XPie from './overview.pie.vue';
 import type { InstanceForPie } from './overview.pie.vue';
 import * as os from '@/os.js';
-import { misskeyApiGet } from '@/utility/misskey-api.js';
+import { misskeyApiGet, misskeyApi } from '@/utility/misskey-api.js';
 import number from '@/filters/number.js';
 import MkNumberDiff from '@/components/MkNumberDiff.vue';
 import { i18n } from '@/i18n.js';
@@ -73,7 +73,7 @@ onMounted(async () => {
 	federationSubActive.value = chart.subActive[0];
 	federationSubActiveDiff.value = chart.subActive[0] - chart.subActive[1];
 
-	misskeyApiGet('federation/stats', { limit: 10 }).then(res => {
+	misskeyApi('federation/stats', { limit: 10 }).then(res => {
 		topSubInstancesForPie.value = [
 			...res.topSubInstances.map(x => ({
 				name: x.host,
