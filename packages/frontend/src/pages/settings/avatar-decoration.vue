@@ -86,12 +86,12 @@ async function openDecoration(avatarDecoration: {
 	roleIdsThatCanBeUsedThisDecoration: string[];
 }, index?: number) {
 	const { dispose } = os.popup(XDialog, {
-		decoration: avatarDecorations.value.find(d => d.id === (selectedDecoration.value ?? avatarDecoration.id)) ?? avatarDecoration,
+		decoration: avatarDecorations.value.find(d => d.id === avatarDecoration.id) ?? avatarDecoration,
 		usingIndex: index ?? null,
 	}, {
 		'attach': async (payload) => {
 			const newDecoration = {
-				id: selectedDecoration.value!,
+				id: avatarDecoration.id,
 				url: avatarDecoration.url,
 				angle: payload.angle,
 				flipH: payload.flipH,
@@ -108,7 +108,7 @@ async function openDecoration(avatarDecoration: {
 		'update': async (payload) => {
 			if (index === undefined) return;
 			const newDecoration = {
-				id: selectedDecoration.value!,
+				id: avatarDecoration.id,
 				url: avatarDecoration.url,
 				angle: payload.angle,
 				flipH: payload.flipH,
